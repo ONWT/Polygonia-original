@@ -1,0 +1,177 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.bukkit.epicsaga</groupId>
+  <version>0.5</version>
+  <artifactId>EpicZones</artifactId>
+  <name>EpicManager</name>
+  <url>http://code.google.com/p/team-eso</url>
+  <organization>
+  	<name>Epic Saga Online</name>
+  	<url>www.epicsagaonline.com</url>
+  </organization>
+
+  <!-- Properties -->
+
+  <properties>
+    <extern.folder>${project.basedir}/Releases</extern.folder>
+    <pom.folder>${project.basedir}/src/poms</pom.folder>
+
+    <!--
+      Change these to move to another build, remember to:
+
+      - match the craftbukkit build to the buklkit build:
+          http://bamboo.lukegb.com/browse/BUKKIT-CRAFTBUKKIT/history
+      - change the sha1 checksums below to the new files
+
+     -->
+    <bukkit.build>100</bukkit.build>
+    <craftbukkit.build>200</craftbukkit.build>
+
+    <!--
+       use an sha1 checksum utility to recalculate these
+
+       (try: http://www.google.com/search?q=sha1+checksum+utility)
+
+     -->
+    <bukkit.sha1>fd352f9bd0c8e933af9c20a579816d56446aaf0e</bukkit.sha1>
+    <craftbukkit.sha1>c166000d8aa656905d9277e5dcd61387abe738f2</craftbukkit.sha1>
+
+    <bukkit.version>0.0.1-SNAPSHOT</bukkit.version>
+    <bukkit.pom>${pom.folder}/bukkit-${bukkit.version}.pom</bukkit.pom>
+    <bukkit.url>
+      http://bamboo.lukegb.com/browse/BUKKIT-BUKKITMAIN-JOB1-${bukkit.build}/artifact/Bukkit-JAR/bukkit-${bukkit.version}.jar
+    </bukkit.url>
+
+    <craftbukkit.version>0.0.1-SNAPSHOT</craftbukkit.version>
+    <craftbukkit.pom>${pom.folder}/craftbukkit-${bukkit.version}.pom</craftbukkit.pom>
+    <craftbukkit.url>
+      http://bamboo.lukegb.com/browse/BUKKIT-CRAFTBUKKIT-JOB1-${craftbukkit.build}/artifact/CraftBukkit-JAR/craftbukkit-${craftbukkit.version}.jar
+    </craftbukkit.url>
+
+    <!--
+      Change this to use a different version of permissions, remember to change
+      the checksum.
+    -->
+    <permissions.version>2.0</permissions.version>
+    <permissions.url>http://mirror.nexua.org/Permissions/JARS/${permissions.version}/Permissions.jar</permissions.url>
+    <permissions.sha1>f78d01af5c4257b0bd91764d2dff80e51e69a0d7</permissions.sha1>
+  </properties>
+
+
+  <build>
+  	  <directory>Releases</directory>
+  	  <finalName>${artifactId}</finalName>
+  	  <sourceDirectory>src</sourceDirectory>
+  	  <resources>
+      <resource>
+        <directory>src</directory>
+        <includes>
+         <include>plugin.yml</include>
+        </includes>
+      </resource>
+      </resources>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <version>2.0.2</version>
+              <configuration>
+                  <source>1.5</source>
+                  <target>1.5</target>
+              </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>com.savage7.maven.plugins</groupId>
+            <artifactId>maven-external-dependency-plugin</artifactId>
+            <version>0.4</version>
+            <inherited>false</inherited>
+            <configuration>
+              <stagingDirectory>${extern.folder}</stagingDirectory>
+              <createChecksum>true</createChecksum>
+              <force>false</force>
+              <artifactItems>
+
+                <!-- versioned bukkit and craftbukkit -->
+                <artifactItem>
+                  <groupId>org.bukkit</groupId>
+                  <artifactId>bukkit</artifactId>
+                  <version>${bukkit.version}-${bukkit.build}</version>
+                  <packaging>jar</packaging>
+                  <pomFile>${bukkit.pom}</pomFile>
+                  <downloadUrl>${bukkit.url}</downloadUrl>
+                  <checksum>${bukkit.sha1}</checksum>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.bukkit</groupId>
+                  <artifactId>craftbukkit</artifactId>
+                  <version>${craftbukkit.version}-${craftbukkit.build}</version>
+                  <packaging>jar</packaging>
+                  <pomFile>${craftbukkit.pom}</pomFile>
+                  <downloadUrl>${craftbukkit.url}</downloadUrl>
+                  <checksum>${craftbukkit.sha1}</checksum>
+                </artifactItem>
+
+
+                <!-- external permissions -->
+                <artifactItem>
+                  <groupId>com.nijikokun</groupId>
+                  <artifactId>Permissions</artifactId>
+                  <version>${permissions.version}</version>
+                  <packaging>jar</packaging>
+                  <downloadUrl>${permissions.url}</downloadUrl>
+                  <checksum>${permissions.sha1}</checksum>
+                </artifactItem>
+
+              </artifactItems>
+            </configuration>
+
+            <executions>
+              <execution>
+                <id>resolve-install-externs</id>
+                <phase>process-resources</phase>
+                <goals>
+                  <goal>resolve-external</goal>
+                  <goal>install-external</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+      </plugins>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>team-eso-repo</id>
+      <url>http://team-eso.googlecode.com/svn/deprepo</url>
+    </repository>
+    <repository>
+      <id>bukkut-repo</id>
+      <url>http://artifacts.lukegb.com/artifactory/repo</url>
+    </repository>
+  </repositories>
+  <dependencies>
+    <dependency>
+      <groupId>com.nijikokun</groupId>
+      <artifactId>Permissions</artifactId>
+      <version>${permissions.version}</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.bukkit</groupId>
+      <artifactId>bukkit</artifactId>
+      <version>${bukkit.version}-${bukkit.build}</version>
+      <scope>compile</scope>
+    </dependency>
+	<dependency>
+	  <groupId>org.yaml</groupId>
+	  <artifactId>snakeyaml</artifactId>
+	  <version>1.7</version>
+	</dependency>
+  </dependencies>
+  <modules>
+  </modules>
+</project>
