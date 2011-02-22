@@ -11,11 +11,10 @@ public class ZoneCommandHandler
 {
   public static void Process(String[] data, PlayerChatEvent event)
   {
+    PloygoniaPlayer ezp = General.getPlayer(event.getPlayer().getEntityId());
+    int playerID = ezp.getEntityID();
     if (Ploygonias.permissions.has(event.getPlayer(), "epiczones.admin"))
     {
-      PloygoniaPlayer ezp = General.getPlayer(event.getPlayer().getEntityId());
-      int playerID = ezp.getEntityID();
-      SendMessage(event, "Data: "+data.toString());
       if (data.length > 1)
       {
         if (data[1].equalsIgnoreCase("create")) Create(data, event, ezp, playerID);
@@ -27,6 +26,7 @@ public class ZoneCommandHandler
         else if (data[1].equalsIgnoreCase("addmember")) addmember(data, event, ezp, playerID);
         else if (data[1].equalsIgnoreCase("removeowner")) removeowner(data, event, ezp, playerID);
         else if (data[1].equalsIgnoreCase("removemember")) removemember(data, event, ezp, playerID);
+        else if (data[1].equalsIgnoreCase("createChild")) CreateChild(data, event, ezp, playerID,true);
         else if (data[1].equalsIgnoreCase("addchildren")) AddChildren(data, event, ezp, playerID);
         else if (data[1].equalsIgnoreCase("removechildren")) RemoveChildren(data, event, ezp, playerID);
         else if (data[1].equalsIgnoreCase("name")) Name(data, event, ezp, playerID);
@@ -43,9 +43,35 @@ public class ZoneCommandHandler
       }
       else
         Help(event, ezp, playerID);
+    }else if(ezp.getCurrentZone().isOwner(ezp))
+    {
+    	if (data.length > 1)
+        {
+          if (data[1].equalsIgnoreCase("save")) Save(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("flag")) Flag(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("floor")) Floor(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("ceiling")) Ceiling(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("addowner")) addowner(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("addmember")) addmember(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("removeowner")) removeowner(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("removemember")) removemember(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("createChild")) CreateChild(data, event, ezp, playerID,false);
+          else if (data[1].equalsIgnoreCase("removechildren")) RemoveChildren(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("name")) Name(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("enter")) EnterMessage(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("exit")) LeaveMessage(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("draw")) Draw(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("confirm")) Confirm(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("edit")) Edit(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("cancel")) Cancel(data, event, ezp, playerID);
+          else if (data[1].equalsIgnoreCase("delete")) Delete(data, event, ezp, playerID);
+          else {
+            Help(event, ezp, playerID);
+          }
+        }
     }
   }
-  
+
 private static void Set(int playerID, String propertyName, Object value)
   {
     if (propertyName.equals("editzone")) General.getPlayer(playerID).setEditZone((Ploygonia)value);
@@ -184,6 +210,45 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
+  private static void CreateChild(String[] data, PlayerChatEvent event,
+			PloygoniaPlayer ezp, int playerID,boolean Admin) {
+		if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.None)
+	    {
+	      if ((data.length > 2) && (data[2].length() > 0))
+	      {
+	        String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
+	        String ptag = data[3].replaceAll("[^a-zA-Z0-9]", "");
+	        if (General.myZones.get(tag) == null)
+	        {
+	        	if(!Admin&&!General.myZones.get(ptag).isOwner(ezp))
+	        	{
+	  	          SendMessage(event, "You do not have permission to create a child zone here");
+	        	}else{
+	        		Ploygonia zone = new Ploygonia();
+	        		zone.setTag(tag);
+	        		zone.setName(tag);
+	        		Set(playerID, "editzone", zone);
+	        		Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDraw);
+	        		Set(playerID, "world", event.getPlayer().getWorld().getName());
+	        		SendMessage(event, "Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
+	        	}
+	        }
+	        else
+	        {
+	          SendMessage(event, "A zone already exists with the tag [" + tag + "]");
+	        }
+	      }
+	      else
+	      {
+	        Help(event, ezp, playerID);
+	      }
+	    }
+	    else
+	    {
+	      Help(event, ezp, playerID);
+	    }	
+	}
+  
   private static void Save(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
     if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw)
@@ -491,16 +556,17 @@ private static void Set(int playerID, String propertyName, Object value)
       {
         if (data[2].length() > 0)
         {
+          String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
           if (General.myZones.get(data[2]) != null)
           {
-            String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
+            
             Set(playerID, "editzone", new Ploygonia((Ploygonia)General.myZones.get(tag)));
             Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneEdit);
             SendMessage(event, "Editing Zone: " + tag);
           }
           else
           {
-            Create(data, event, ezp, playerID);
+        	  SendMessage(event, "No sutch zone as: " + tag);
           }
         }
       }

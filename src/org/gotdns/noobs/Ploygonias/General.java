@@ -75,12 +75,13 @@ public class General
       {
         return true;
       }
-      if (zone.isOwner(player))
+      if (zone.isOwner(General.getPlayer(player.getEntityId())))
       {
     	  return true;
       }
-      if (zone.isMember(player))
+      if (zone.isMember(General.getPlayer(player.getEntityId())))
       {
+    	  //TODO:make a flag so that you can say if members can make subZones.
     	  return true;
       }
       if (Ploygonias.permissions.has(player, "epiczones." + zone.getTag() + "." + flag + ".deny"))

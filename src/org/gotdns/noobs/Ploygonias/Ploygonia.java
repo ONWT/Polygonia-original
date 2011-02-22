@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 
 public class Ploygonia
 {
+  //TODO: Make singleton out off this class
   private String tag = "";
   private String name = "";
 
@@ -41,6 +42,7 @@ public class Ploygonia
   public Ploygonia() {
   }
 
+  //TODO: Remove ugliness
   public Ploygonia(Ploygonia prime) {
     this.tag = prime.tag;
     this.name = prime.name;
@@ -149,8 +151,8 @@ public String getTag() {
   public Ploygonia getParent() { return this.parent; } 
   public Map<String, Ploygonia> getChildren() { return this.children; } 
   public Set<String> getChildrenTags() { return this.childrenNames; } 
-  public boolean isOwner(Player p) {return this.owner.contains(p); }
-  public boolean isMember(Player p) {return this.member.contains(p); }
+  public boolean isOwner(PloygoniaPlayer ezp) {return this.owner.contains(ezp); }
+  public boolean isMember(PloygoniaPlayer p) {return this.member.contains(p); }
   public void addOwner(PloygoniaPlayer epicZonePlayer) {this.owner.add(epicZonePlayer); }
   public void addMember(PloygoniaPlayer p) {this.member.add(p); }
   public void delOwner(PloygoniaPlayer epicZonePlayer) {this.owner.remove(epicZonePlayer); }
