@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/noobs/Downloads/bukkit-0.0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/Users/noobs/Downloads/snakeyaml-1.7.jar"/>
 	<classpathentry kind="lib" path="/Users/noobs/Downloads/Permissions.jar"/>
+	<classpathentry kind="lib" path="/Users/noobs/Downloads/bukkit-0.0.1-SNAPSHOT (1).jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

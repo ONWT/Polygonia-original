@@ -73,7 +73,7 @@ public class General
     {
       if (zone == null)
       {
-        return getDefaultPerm(flag);
+        return true;
       }
       if (zone.isOwner(player))
       {

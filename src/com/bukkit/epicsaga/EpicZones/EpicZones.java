@@ -27,14 +27,10 @@ public class EpicZones extends JavaPlugin
   private static final String CONFIG_FILE = "config.yml";
   public static PermissionHandler permissions;
 
-  public EpicZones(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader)
-  {
-    super(pluginLoader, instance, desc, folder, plugin, cLoader);
-    File file = new File(folder + File.separator + CONFIG_FILE);
-    General.config = new EpicZonesConfig(file);
-  }
 
   public void onEnable() {
+	File file = new File(this.getDataFolder() + File.separator + CONFIG_FILE);
+	General.config = new EpicZonesConfig(file);
     PluginDescriptionFile pdfFile = getDescription();
     try
     {
@@ -56,8 +52,7 @@ public class EpicZones extends JavaPlugin
       pm.registerEvent(Event.Type.BLOCK_DAMAGED, this.blockListener, Event.Priority.Normal, this);
       pm.registerEvent(Event.Type.BLOCK_PLACED, this.blockListener, Event.Priority.Normal, this);
 
-      pm.registerEvent(Event.Type.ENTITY_DAMAGEDBY_ENTITY, this.entityListener, Event.Priority.Normal, this);
-      pm.registerEvent(Event.Type.ENTITY_DAMAGEDBY_PROJECTILE, this.entityListener, Event.Priority.Normal, this);
+      pm.registerEvent(Event.Type.ENTITY_DAMAGED, this.entityListener, Event.Priority.Normal, this);
 
       pm.registerEvent(Event.Type.VEHICLE_MOVE, this.vehicleListener, Event.Priority.Normal, this);
 
