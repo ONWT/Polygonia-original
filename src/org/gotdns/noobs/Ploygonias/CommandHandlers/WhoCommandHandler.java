@@ -1,14 +1,14 @@
-package com.bukkit.epicsaga.EpicZones.CommandHandlers;
+package org.gotdns.noobs.Ploygonias.CommandHandlers;
 
 import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
+import org.gotdns.noobs.Ploygonias.General;
+import org.gotdns.noobs.Ploygonias.Ploygonia;
+import org.gotdns.noobs.Ploygonias.PloygoniaPlayer;
+import org.gotdns.noobs.Ploygonias.Ploygonias;
 
-import com.bukkit.epicsaga.EpicZones.EpicZone;
-import com.bukkit.epicsaga.EpicZones.EpicZonePlayer;
-import com.bukkit.epicsaga.EpicZones.EpicZones;
-import com.bukkit.epicsaga.EpicZones.General;
 
 public class WhoCommandHandler
 {
@@ -16,7 +16,7 @@ public class WhoCommandHandler
   {
     int pageNumber = 1;
 
-    if (EpicZones.permissions.has(event.getPlayer(), "epiczones.who"))
+    if (Ploygonias.permissions.has(event.getPlayer(), "epiczones.who"))
     {
       if (data.length > 1)
       {
@@ -52,11 +52,11 @@ public class WhoCommandHandler
     }
   }
 
-  private static void buildWho(EpicZonePlayer ezp, Player player, int pageNumber, boolean allZones)
+  private static void buildWho(PloygoniaPlayer ezp, Player player, int pageNumber, boolean allZones)
   {
-    EpicZone currentZone = General.getPlayer(player.getName()).getCurrentZone();
+    Ploygonia currentZone = General.getPlayer(player.getName()).getCurrentZone();
     if (currentZone == null) allZones = true;
-    ArrayList<EpicZonePlayer> players = getPlayers(currentZone, allZones);
+    ArrayList<PloygoniaPlayer> players = getPlayers(currentZone, allZones);
     int playersPerPage = 8;
     int playerCount = players.size();
 
@@ -83,22 +83,22 @@ public class WhoCommandHandler
     }
   }
 
-  private static String buildWhoPlayerName(EpicZonePlayer ezp, ArrayList<EpicZonePlayer> players, int index, boolean allZones)
+  private static String buildWhoPlayerName(PloygoniaPlayer ezp, ArrayList<PloygoniaPlayer> players, int index, boolean allZones)
   {
     if (allZones)
     {
-      if (((EpicZonePlayer)players.get(index)).getCurrentZone() != null)
+      if (((PloygoniaPlayer)players.get(index)).getCurrentZone() != null)
       {
-        return ((EpicZonePlayer)players.get(index)).getName() + " - " + ((EpicZonePlayer)players.get(index)).getCurrentZone().getName() + " - Distance: " + CalcDist(ezp, (EpicZonePlayer)players.get(index));
+        return ((PloygoniaPlayer)players.get(index)).getName() + " - " + ((PloygoniaPlayer)players.get(index)).getCurrentZone().getName() + " - Distance: " + CalcDist(ezp, (PloygoniaPlayer)players.get(index));
       }
 
-      return ((EpicZonePlayer)players.get(index)).getName() + " - Distance: " + CalcDist(ezp, (EpicZonePlayer)players.get(index));
+      return ((PloygoniaPlayer)players.get(index)).getName() + " - Distance: " + CalcDist(ezp, (PloygoniaPlayer)players.get(index));
     }
 
-    return ((EpicZonePlayer)players.get(index)).getName() + " - Distance: " + CalcDist(ezp, (EpicZonePlayer)players.get(index));
+    return ((PloygoniaPlayer)players.get(index)).getName() + " - Distance: " + CalcDist(ezp, (PloygoniaPlayer)players.get(index));
   }
 
-  private static int CalcDist(EpicZonePlayer player1, EpicZonePlayer player2)
+  private static int CalcDist(PloygoniaPlayer player1, PloygoniaPlayer player2)
   {
     int result = 0;
 
@@ -114,15 +114,15 @@ public class WhoCommandHandler
     return result;
   }
 
-  private static ArrayList<EpicZonePlayer> getPlayers(EpicZone currentZone, boolean allZones)
+  private static ArrayList<PloygoniaPlayer> getPlayers(Ploygonia currentZone, boolean allZones)
   {
     if (allZones)
     {
       return General.myPlayers;
     }
 
-    ArrayList<EpicZonePlayer> result = new ArrayList<EpicZonePlayer>();
-    for (EpicZonePlayer ezp : General.myPlayers)
+    ArrayList<PloygoniaPlayer> result = new ArrayList<PloygoniaPlayer>();
+    for (PloygoniaPlayer ezp : General.myPlayers)
     {
       if ((result.contains(ezp)) || (!ezp.getCurrentZone().equals(currentZone)))
         continue;

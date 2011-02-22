@@ -1,4 +1,4 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.awt.Point;
 import java.awt.Polygon;
@@ -16,18 +16,18 @@ import org.bukkit.entity.Player;
 
 public class General
 {
-  public static Map<String, EpicZone> myZones = new HashMap<String, EpicZone>();
+  public static Map<String, Ploygonia> myZones = new HashMap<String, Ploygonia>();
   public static ArrayList<String> myZoneTags = new ArrayList<String>();
-  public static ArrayList<EpicZonePlayer> myPlayers = new ArrayList<EpicZonePlayer>();
+  public static ArrayList<PloygoniaPlayer> myPlayers = new ArrayList<PloygoniaPlayer>();
   private static final String ZONE_FILE = "zones.txt";
   private static File myFile;
-  public static EpicZonesConfig config;
+  public static PloygoniasConfig config;
   public static final String NO_PERM_ENTER = "You do not have permission to enter ";
   public static final String NO_PERM_BORDER = "You have reached the border of the map.";
 
-  public static EpicZonePlayer getPlayer(String name)
+  public static PloygoniaPlayer getPlayer(String name)
   {
-    for (EpicZonePlayer ezp : myPlayers)
+    for (PloygoniaPlayer ezp : myPlayers)
     {
       if (ezp.getName().equalsIgnoreCase(name)) {
         return ezp;
@@ -36,9 +36,9 @@ public class General
     return null;
   }
 
-  public static EpicZonePlayer getPlayer(int entityID)
+  public static PloygoniaPlayer getPlayer(int entityID)
   {
-    for (EpicZonePlayer ezp : myPlayers)
+    for (PloygoniaPlayer ezp : myPlayers)
     {
       if (ezp.getEntityID() == entityID) {
         return ezp;
@@ -49,7 +49,7 @@ public class General
 
   public static void addPlayer(int entityID, String name)
   {
-    myPlayers.add(new EpicZonePlayer(entityID, name));
+    myPlayers.add(new PloygoniaPlayer(entityID, name));
   }
 
   public static void removePlayer(int entityID)
@@ -58,7 +58,7 @@ public class General
 
     for (int i = 0; i < myPlayers.size(); i++)
     {
-      if (((EpicZonePlayer)myPlayers.get(i)).getEntityID() != entityID)
+      if (((PloygoniaPlayer)myPlayers.get(i)).getEntityID() != entityID)
         continue;
       index = i;
       break;
@@ -67,9 +67,9 @@ public class General
     if (index > -1) myPlayers.remove(index);
   }
 
-  public static boolean hasPermissions(Player player, EpicZone zone, String flag)
+  public static boolean hasPermissions(Player player, Ploygonia zone, String flag)
   {
-    if (!EpicZones.permissions.has(player, "epiczones.ignorepermissions"))
+    if (!Ploygonias.permissions.has(player, "epiczones.ignorepermissions"))
     {
       if (zone == null)
       {
@@ -83,11 +83,11 @@ public class General
       {
     	  return true;
       }
-      if (EpicZones.permissions.has(player, "epiczones." + zone.getTag() + "." + flag + ".deny"))
+      if (Ploygonias.permissions.has(player, "epiczones." + zone.getTag() + "." + flag + ".deny"))
       {
         return false;
       }
-      if (EpicZones.permissions.has(player, "epiczones." + zone.getTag() + "." + flag))
+      if (Ploygonias.permissions.has(player, "epiczones." + zone.getTag() + "." + flag))
       {
         return true;
       }
@@ -131,7 +131,7 @@ public class General
         {
           String line = scanner.nextLine().trim();
           if ((!line.startsWith("#")) && (!line.isEmpty())) {
-            EpicZone newZone = new EpicZone(line);
+            Ploygonia newZone = new Ploygonia(line);
             myZones.put(newZone.getTag(), newZone);
             myZoneTags.add(newZone.getTag());
           }
@@ -153,12 +153,12 @@ public class General
   {
     for (String zoneTag : myZoneTags)
     {
-      EpicZone zone = (EpicZone)myZones.get(zoneTag);
+      Ploygonia zone = (Ploygonia)myZones.get(zoneTag);
       if (zone.hasChildren())
       {
         for (String child : zone.getChildrenTags())
         {
-          EpicZone childZone = (EpicZone)myZones.get(child);
+          Ploygonia childZone = (Ploygonia)myZones.get(child);
 
           childZone.setParent(zone);
           zone.addChild(childZone);
@@ -199,7 +199,7 @@ public class General
 
     for (String tag : myZoneTags)
     {
-      EpicZone z = (EpicZone)myZones.get(tag);
+      Ploygonia z = (Ploygonia)myZones.get(tag);
       line = z.getTag() + "|";
       line = line + z.getWorld() + "|";
       line = line + z.getName() + "|";
@@ -218,25 +218,25 @@ public class General
     return result;
   }
 
-  private static String BuildMembers(EpicZone z) {
+  private static String BuildMembers(Ploygonia z) {
 		String result="";
-		for(EpicZonePlayer p:z.getMembers())
+		for(PloygoniaPlayer p:z.getMembers())
 		{
 			result=result+" "+p.getName();
 		}
 		return result;
   }
 
-  private static String BuildOwners(EpicZone z) {
+  private static String BuildOwners(Ploygonia z) {
 	String result="";
-	for(EpicZonePlayer p:z.getOwners())
+	for(PloygoniaPlayer p:z.getOwners())
 	{
 		result=result+" "+p.getName();
 	}
 	return result;
   }
 
-  private static String BuildFlags(EpicZone z)
+  private static String BuildFlags(Ploygonia z)
   {
     String result = "";
 
@@ -262,7 +262,7 @@ public class General
     return result;
   }
 
-  private static String BuildChildren(EpicZone z)
+  private static String BuildChildren(Ploygonia z)
   {
     String result = "";
 
@@ -274,7 +274,7 @@ public class General
     return result;
   }
 
-  private static String BuildPointList(EpicZone z)
+  private static String BuildPointList(Ploygonia z)
   {
     String result = "";
     Polygon poly = z.getPolygon();
@@ -287,25 +287,25 @@ public class General
     return result;
   }
 
-  public static EpicZone getZoneForPoint(Player player, EpicZonePlayer ezp, int playerHeight, Point playerPoint, String worldName)
+  public static Ploygonia getZoneForPoint(Player player, PloygoniaPlayer ezp, int playerHeight, Point playerPoint, String worldName)
   {
-    EpicZone result = null;
+    Ploygonia result = null;
     String resultTag = "";
 
     for (String zoneTag : myZoneTags)
     {
-      EpicZone zone = (EpicZone)myZones.get(zoneTag);
+      Ploygonia zone = (Ploygonia)myZones.get(zoneTag);
       resultTag = isPointInZone(zone, playerHeight, playerPoint, worldName);
       if (resultTag.length() <= 0)
         continue;
-      result = (EpicZone)myZones.get(resultTag);
+      result = (Ploygonia)myZones.get(resultTag);
       break;
     }
 
     return result;
   }
 
-  public static String isPointInZone(EpicZone zone, int playerHeight, Point playerPoint, String worldName)
+  public static String isPointInZone(Ploygonia zone, int playerHeight, Point playerPoint, String worldName)
   {
     String result = "";
 
@@ -313,7 +313,7 @@ public class General
     {
       for (String zoneTag : zone.getChildrenTags())
       {
-        result = isPointInZone((EpicZone)zone.getChildren().get(zoneTag), playerHeight, playerPoint, worldName);
+        result = isPointInZone((Ploygonia)zone.getChildren().get(zoneTag), playerHeight, playerPoint, worldName);
         if (result.length() > 0)
         {
           return result;
@@ -339,7 +339,7 @@ public class General
   {
     if (config.enableRadius)
     {
-      EpicZonePlayer ezp = getPlayer(player.getName());
+      PloygoniaPlayer ezp = getPlayer(player.getName());
       double xsquared = point.x * point.x;
       double ysquared = point.y * point.y;
       double distanceFromCenter = Math.sqrt(xsquared + ysquared);
@@ -356,7 +356,7 @@ public class General
         return true;
       }
 
-      if (EpicZones.permissions.has(player, "epiczones.ignoremapradius"))
+      if (Ploygonias.permissions.has(player, "epiczones.ignoremapradius"))
       {
         if (!ezp.getPastBorder())
         {
@@ -372,7 +372,7 @@ public class General
     return true;
   }
 
-  public static void WarnPlayer(Player player, EpicZonePlayer ezp, String message)
+  public static void WarnPlayer(Player player, PloygoniaPlayer ezp, String message)
   {
     if (ezp.getLastWarned().before(new Date()))
     {
@@ -381,7 +381,7 @@ public class General
     }
   }
 
-  public static boolean ShouldCheckPlayer(EpicZonePlayer ezp)
+  public static boolean ShouldCheckPlayer(PloygoniaPlayer ezp)
   {
     return ezp.getLastCheck().before(new Date());
   }

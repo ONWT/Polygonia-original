@@ -1,4 +1,4 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.awt.Point;
 import java.util.Date;
@@ -12,19 +12,19 @@ import org.bukkit.event.player.PlayerItemEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.gotdns.noobs.Ploygonias.CommandHandlers.ReloadCommandHandler;
+import org.gotdns.noobs.Ploygonias.CommandHandlers.WhoCommandHandler;
+import org.gotdns.noobs.Ploygonias.CommandHandlers.ZoneCommandHandler;
 
-import com.bukkit.epicsaga.EpicZones.CommandHandlers.ReloadCommandHandler;
-import com.bukkit.epicsaga.EpicZones.CommandHandlers.WhoCommandHandler;
-import com.bukkit.epicsaga.EpicZones.CommandHandlers.ZoneCommandHandler;
 
-public class EpicZonesPlayerListener extends PlayerListener
+public class PloygoniasPlayerListener extends PlayerListener
 {
-  private final EpicZones plugin;
+  private final Ploygonias plugin;
   private static final String NO_PERM_BUCKET = "You do not have permissions to do that in this zone.";
   private static final int EMPTY_BUCKET = 325;
   private Set<Integer> bucketTypes = new HashSet<Integer>();
 
-  public EpicZonesPlayerListener(EpicZones instance)
+  public PloygoniasPlayerListener(Ploygonias instance)
   {
     this.plugin = instance;
     this.bucketTypes.add(Integer.valueOf(326));
@@ -34,7 +34,7 @@ public class EpicZonesPlayerListener extends PlayerListener
   public void onPlayerMove(PlayerMoveEvent event)
   {
     Player player = event.getPlayer();
-    EpicZonePlayer ezp = General.getPlayer(player.getName());
+    PloygoniaPlayer ezp = General.getPlayer(player.getName());
     int playerHeight = event.getTo().getBlockY();
     Point playerPoint = new Point(event.getTo().getBlockX(), event.getTo().getBlockZ());
 
@@ -63,7 +63,7 @@ public class EpicZonesPlayerListener extends PlayerListener
   public void onPlayerTeleport(PlayerMoveEvent event)
   {
     Player player = event.getPlayer();
-    EpicZonePlayer ezp = General.getPlayer(player.getName());
+    PloygoniaPlayer ezp = General.getPlayer(player.getName());
     int playerHeight = event.getTo().getBlockY();
     Point playerPoint = new Point(event.getTo().getBlockX(), event.getTo().getBlockZ());
 
@@ -89,9 +89,9 @@ public class EpicZonesPlayerListener extends PlayerListener
     }
   }
 
-  private boolean PlayerWithinZoneLogic(Player player, EpicZonePlayer ezp, int playerHeight, Point playerPoint)
+  private boolean PlayerWithinZoneLogic(Player player, PloygoniaPlayer ezp, int playerHeight, Point playerPoint)
   {
-    EpicZone foundZone = null;
+    Ploygonia foundZone = null;
     String worldName = player.getWorld().getName();
 
     if (General.pointWithinBorder(playerPoint, player))
@@ -132,9 +132,9 @@ public class EpicZonesPlayerListener extends PlayerListener
     return true;
   }
 
-  private EpicZone FindZone(Player player, EpicZonePlayer ezp, int playerHeight, Point playerPoint, String worldName)
+  private Ploygonia FindZone(Player player, PloygoniaPlayer ezp, int playerHeight, Point playerPoint, String worldName)
   {
-    EpicZone result = null;
+    Ploygonia result = null;
 
     if (ezp.getCurrentZone() != null)
     {
@@ -144,7 +144,7 @@ public class EpicZonesPlayerListener extends PlayerListener
       {
         if (!resultTag.equalsIgnoreCase(ezp.getCurrentZone().getTag()))
         {
-          result = (EpicZone)General.myZones.get(resultTag);
+          result = (Ploygonia)General.myZones.get(resultTag);
         }
       }
       else
@@ -190,13 +190,13 @@ public class EpicZonesPlayerListener extends PlayerListener
     if (this.bucketTypes.contains(Integer.valueOf(event.getPlayer().getItemInHand().getTypeId())))
     {
       Player player = event.getPlayer();
-      EpicZonePlayer ezp = General.getPlayer(player.getName());
+      PloygoniaPlayer ezp = General.getPlayer(player.getName());
       Point blockPoint = new Point(event.getBlockClicked().getLocation().getBlockX(), event.getBlockClicked().getLocation().getBlockZ());
       String worldName = player.getWorld().getName();
       int blockHeight = event.getBlockClicked().getLocation().getBlockY();
       boolean hasPerms = false;
 
-      EpicZone currentZone = null;
+      Ploygonia currentZone = null;
       if (General.pointWithinBorder(blockPoint, player))
       {
         currentZone = General.getZoneForPoint(player, ezp, blockHeight, blockPoint, worldName);
@@ -216,13 +216,13 @@ public class EpicZonesPlayerListener extends PlayerListener
     else if (event.getPlayer().getItemInHand().getTypeId() == EMPTY_BUCKET)
     {
       Player player = event.getPlayer();
-      EpicZonePlayer ezp = General.getPlayer(player.getName());
+      PloygoniaPlayer ezp = General.getPlayer(player.getName());
       Point blockPoint = new Point(event.getBlockClicked().getLocation().getBlockX(), event.getBlockClicked().getLocation().getBlockZ());
       String worldName = player.getWorld().getName();
       int blockHeight = event.getBlockClicked().getLocation().getBlockY();
       boolean hasPerms = false;
 
-      EpicZone currentZone = null;
+      Ploygonia currentZone = null;
       if (General.pointWithinBorder(blockPoint, player))
       {
         currentZone = General.getZoneForPoint(player, ezp, blockHeight, blockPoint, worldName);
@@ -241,7 +241,7 @@ public class EpicZonesPlayerListener extends PlayerListener
     }
     else if (event.getPlayer().getItemInHand().getTypeId() == General.config.zoneTool)
     {
-      if (General.getPlayer(event.getPlayer().getEntityId()).getMode() == EpicZonePlayer.EpicZoneMode.ZoneDraw)
+      if (General.getPlayer(event.getPlayer().getEntityId()).getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw)
       {
         Point point = new Point(event.getBlockClicked().getLocation().getBlockX(), event.getBlockClicked().getLocation().getBlockZ());
         General.getPlayer(event.getPlayer().getEntityId()).getEditZone().addPoint(point);

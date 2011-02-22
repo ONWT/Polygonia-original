@@ -1,9 +1,9 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EpicZonePermission
+public class PloygoniaPermission
 {
   private String permissionObject = "";
   private Map<String, String> permissionFlags = new HashMap<String, String>();
@@ -11,7 +11,7 @@ public class EpicZonePermission
   public String getPermissionObject() { return this.permissionObject; } 
   public Map<String, String> getPermissionFlags() { return this.permissionFlags; }
 
-  public EpicZonePermission(String permissionData)
+  public PloygoniaPermission(String permissionData)
   {
     this.permissionObject = permissionData.substring(0, permissionData.indexOf("["));
     this.permissionFlags = buildFlags(permissionData.substring(permissionData.indexOf("[") + 1, permissionData.length() - 1));

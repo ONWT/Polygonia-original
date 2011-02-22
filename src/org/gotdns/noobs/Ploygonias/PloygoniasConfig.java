@@ -1,4 +1,4 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -10,7 +10,7 @@ import org.bukkit.util.config.Configuration;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-public class EpicZonesConfig extends Configuration
+public class PloygoniasConfig extends Configuration
 {
   private static final Yaml yaml;
   private File file;
@@ -28,7 +28,7 @@ public class EpicZonesConfig extends Configuration
     yaml = new Yaml(options);
   }
 
-  public EpicZonesConfig(File file)
+  public PloygoniasConfig(File file)
   {
     super(file);
 

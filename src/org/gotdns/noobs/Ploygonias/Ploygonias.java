@@ -1,9 +1,8 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.io.File;
 import java.util.HashMap;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
@@ -15,13 +14,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
-public class EpicZones extends JavaPlugin
+public class Ploygonias extends JavaPlugin
 {
-  private final EpicZonesPlayerListener playerListener = new EpicZonesPlayerListener(this);
-  private final EpicZonesBlockListener blockListener = new EpicZonesBlockListener(this);
-  private final EpicZonesEntityListener entityListener = new EpicZonesEntityListener(this);
-  private final EpicZonesVehicleListener vehicleListener = new EpicZonesVehicleListener(this);
-  private final EpicZonesRegen regen = new EpicZonesRegen(this);
+  private final PloygoniasPlayerListener playerListener = new PloygoniasPlayerListener(this);
+  private final PloygoniasBlockListener blockListener = new PloygoniasBlockListener(this);
+  private final PloygoniasEntityListener entityListener = new PloygoniasEntityListener(this);
+  private final PloygoniasVehicleListener vehicleListener = new PloygoniasVehicleListener(this);
+  private final PloygoniasRegen regen = new PloygoniasRegen(this);
 
   private final HashMap<Player, Boolean> debugees = new HashMap<Player, Boolean>();
   private static final String CONFIG_FILE = "config.yml";
@@ -30,7 +29,7 @@ public class EpicZones extends JavaPlugin
 
   public void onEnable() {
 	File file = new File(this.getDataFolder() + File.separator + CONFIG_FILE);
-	General.config = new EpicZonesConfig(file);
+	General.config = new PloygoniasConfig(file);
     PluginDescriptionFile pdfFile = getDescription();
     try
     {

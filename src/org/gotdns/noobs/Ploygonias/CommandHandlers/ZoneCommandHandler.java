@@ -1,19 +1,19 @@
-package com.bukkit.epicsaga.EpicZones.CommandHandlers;
+package org.gotdns.noobs.Ploygonias.CommandHandlers;
 
 import org.bukkit.event.player.PlayerChatEvent;
+import org.gotdns.noobs.Ploygonias.General;
+import org.gotdns.noobs.Ploygonias.Ploygonia;
+import org.gotdns.noobs.Ploygonias.PloygoniaPlayer;
+import org.gotdns.noobs.Ploygonias.Ploygonias;
 
-import com.bukkit.epicsaga.EpicZones.EpicZone;
-import com.bukkit.epicsaga.EpicZones.EpicZonePlayer;
-import com.bukkit.epicsaga.EpicZones.EpicZones;
-import com.bukkit.epicsaga.EpicZones.General;
 
 public class ZoneCommandHandler
 {
   public static void Process(String[] data, PlayerChatEvent event)
   {
-    if (EpicZones.permissions.has(event.getPlayer(), "epiczones.admin"))
+    if (Ploygonias.permissions.has(event.getPlayer(), "epiczones.admin"))
     {
-      EpicZonePlayer ezp = General.getPlayer(event.getPlayer().getEntityId());
+      PloygoniaPlayer ezp = General.getPlayer(event.getPlayer().getEntityId());
       int playerID = ezp.getEntityID();
       SendMessage(event, "Data: "+data.toString());
       if (data.length > 1)
@@ -48,8 +48,8 @@ public class ZoneCommandHandler
   
 private static void Set(int playerID, String propertyName, Object value)
   {
-    if (propertyName.equals("editzone")) General.getPlayer(playerID).setEditZone((EpicZone)value);
-    else if (propertyName.equals("mode")) General.getPlayer(playerID).setMode((EpicZonePlayer.EpicZoneMode)value);
+    if (propertyName.equals("editzone")) General.getPlayer(playerID).setEditZone((Ploygonia)value);
+    else if (propertyName.equals("mode")) General.getPlayer(playerID).setMode((PloygoniaPlayer.PloygoniaMode)value);
     else if (propertyName.equals("flag:pvp")) General.getPlayer(playerID).getEditZone().setPVP(Boolean.valueOf((String)value).booleanValue());
     else if (propertyName.equals("flag:regen")) General.getPlayer(playerID).getEditZone().setRegen((String)value);
     else if (propertyName.equals("floor")) General.getPlayer(playerID).getEditZone().setFloor(((Integer)value).intValue());
@@ -57,7 +57,7 @@ private static void Set(int playerID, String propertyName, Object value)
     else if (propertyName.equals("entermessage")) General.getPlayer(playerID).getEditZone().setEnterText((String)value);
     else if (propertyName.equals("exitmessage")) General.getPlayer(playerID).getEditZone().setExitText((String)value);
     else if (propertyName.equals("name")) General.getPlayer(playerID).getEditZone().setName((String)value);
-    else if (propertyName.equals("addchild")) General.getPlayer(playerID).getEditZone().addChild((EpicZone)value);
+    else if (propertyName.equals("addchild")) General.getPlayer(playerID).getEditZone().addChild((Ploygonia)value);
     else if (propertyName.equals("addchildtag")) General.getPlayer(playerID).getEditZone().getChildrenTags().add((String)value);
     else if (propertyName.equals("removechild")) General.getPlayer(playerID).getEditZone().removeChild((String)value);
     else if (propertyName.equals("addowner")) General.getPlayer(playerID).getEditZone().addOwner(General.getPlayer((String)value));
@@ -70,8 +70,8 @@ private static void Set(int playerID, String propertyName, Object value)
   }
 
   private static void addmember(String[] data, PlayerChatEvent event,
-		EpicZonePlayer ezp, int playerID) {
-	  if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+		PloygoniaPlayer ezp, int playerID) {
+	  if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
 	    {
 	      if (data.length > 2)
 	      {
@@ -90,8 +90,8 @@ private static void Set(int playerID, String propertyName, Object value)
   }
 
   private static void addowner(String[] data, PlayerChatEvent event,
-		EpicZonePlayer ezp, int playerID) {
-	  if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+		PloygoniaPlayer ezp, int playerID) {
+	  if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
 	    {
 	      if (data.length > 1)
 	      {
@@ -109,8 +109,8 @@ private static void Set(int playerID, String propertyName, Object value)
   }
 
   private static void removemember(String[] data, PlayerChatEvent event,
-			EpicZonePlayer ezp, int playerID) {
-		  if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+			PloygoniaPlayer ezp, int playerID) {
+		  if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
 		    {
 		      if (data.length > 2)
 		      {
@@ -129,8 +129,8 @@ private static void Set(int playerID, String propertyName, Object value)
 	  }
 
 	  private static void removeowner(String[] data, PlayerChatEvent event,
-			EpicZonePlayer ezp, int playerID) {
-		  if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+			PloygoniaPlayer ezp, int playerID) {
+		  if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
 		    {
 		      if (data.length > 1)
 		      {
@@ -151,20 +151,20 @@ private static void Set(int playerID, String propertyName, Object value)
     event.getPlayer().sendMessage(message);
   }
 
-  private static void Create(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Create(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.None)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.None)
     {
       if ((data.length > 2) && (data[2].length() > 0))
       {
         String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
         if (General.myZones.get(tag) == null)
         {
-          EpicZone zone = new EpicZone();
+          Ploygonia zone = new Ploygonia();
           zone.setTag(tag);
           zone.setName(tag);
           Set(playerID, "editzone", zone);
-          Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneDraw);
+          Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDraw);
           Set(playerID, "world", event.getPlayer().getWorld().getName());
           SendMessage(event, "Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
         }
@@ -184,13 +184,13 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Save(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Save(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDraw)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw)
     {
       if (ezp.getEditZone().getPolygon().npoints > 2)
       {
-        Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneEdit);
+        Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneEdit);
         Set(playerID, "boundingbox", "");
         SendMessage(event, "Drawing Complete. It's reccomended you set the name of your zone now with /zone name [value], or type /zone for more options.");
       }
@@ -199,7 +199,7 @@ private static void Set(int playerID, String propertyName, Object value)
         SendMessage(event, "You must draw at least 3 points before you can move on.");
       }
     }
-    else if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if (General.myZones.get(ezp.getEditZone().getTag()) == null)
       {
@@ -212,7 +212,7 @@ private static void Set(int playerID, String propertyName, Object value)
         General.myZones.put(ezp.getEditZone().getTag(), ezp.getEditZone());
       }
       General.SaveZones();
-      Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.None);
+      Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.None);
       SendMessage(event, "Zone Saved.");
     }
     else
@@ -221,9 +221,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Flag(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Flag(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if ((data.length > 3) && (data[2].length() > 0) && (data[3].length() > 0))
       {
@@ -251,9 +251,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Floor(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Floor(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if ((data.length > 2) && (IsNumeric(data[2])))
       {
@@ -272,9 +272,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Ceiling(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Ceiling(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if ((data.length > 2) && (IsNumeric(data[2])))
       {
@@ -293,9 +293,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void AddChildren(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void AddChildren(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if (data.length > 2)
       {
@@ -317,9 +317,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void RemoveChildren(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void RemoveChildren(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if (data.length > 2)
       {
@@ -340,9 +340,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Name(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Name(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if (data.length > 2)
       {
@@ -364,9 +364,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void EnterMessage(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void EnterMessage(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if (data.length > 2)
       {
@@ -388,9 +388,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void LeaveMessage(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void LeaveMessage(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if (data.length > 2)
       {
@@ -412,25 +412,25 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Draw(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Draw(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
-      Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneDrawConfirm);
+      Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDrawConfirm);
       SendMessage(event, "WARNING! Entering draw mode will erase all points for the zone! type /zone draw confirm or /zone draw deny.");
     }
-    else if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDrawConfirm)
+    else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDrawConfirm)
     {
       if (data.length > 2)
       {
         if (data[2].equalsIgnoreCase("confirm"))
         {
-          Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneDraw);
+          Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDraw);
           SendMessage(event, "Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
         }
         else if (data[2].equalsIgnoreCase("deny"))
         {
-          Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneEdit);
+          Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneEdit);
           SendMessage(event, "Draw Mode canceled, back in Edit Mode. type /zone for more options.");
         }
       }
@@ -441,9 +441,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void World(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void World(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       if (data.length > 2)
       {
@@ -460,20 +460,20 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Confirm(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Confirm(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDeleteConfirm)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDeleteConfirm)
     {
       General.myZoneTags.remove(ezp.getEditZone().getTag());
       General.SaveZones();
       General.loadZones(null);
       SendMessage(event, "Zone [" + ezp.getEditZone().getTag() + "] has been deleted.");
-      Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.None);
+      Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.None);
       Set(playerID, "editzone", null);
     }
-    else if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDrawConfirm)
+    else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDrawConfirm)
     {
-      Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneDraw);
+      Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDraw);
       Set(playerID, "clearpoints", "");
       SendMessage(event, "Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
     }
@@ -483,9 +483,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Edit(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Edit(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.None)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.None)
     {
       if (data.length > 2)
       {
@@ -494,8 +494,8 @@ private static void Set(int playerID, String propertyName, Object value)
           if (General.myZones.get(data[2]) != null)
           {
             String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
-            Set(playerID, "editzone", new EpicZone((EpicZone)General.myZones.get(tag)));
-            Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneEdit);
+            Set(playerID, "editzone", new Ploygonia((Ploygonia)General.myZones.get(tag)));
+            Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneEdit);
             SendMessage(event, "Editing Zone: " + tag);
           }
           else
@@ -511,17 +511,17 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Cancel(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Cancel(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if ((ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit) || (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDraw))
+    if ((ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit) || (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw))
     {
-      Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.None);
+      Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.None);
       Set(playerID, "editzone", null);
       SendMessage(event, "Zone modification cancelled, no changes were saved.");
     }
-    else if ((ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDrawConfirm) || (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDeleteConfirm))
+    else if ((ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDrawConfirm) || (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDeleteConfirm))
     {
-      Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneEdit);
+      Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneEdit);
       SendMessage(event, "Draw Mode canceled, back in Edit Mode. type /zone for more options.");
     }
     else
@@ -530,11 +530,11 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Delete(String[] data, PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Delete(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
-      Set(playerID, "mode", EpicZonePlayer.EpicZoneMode.ZoneDeleteConfirm);
+      Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDeleteConfirm);
       SendMessage(event, "To continue deleting the zone [" + ezp.getEditZone().getTag() + "] type /zone confirm.");
     }
     else
@@ -543,9 +543,9 @@ private static void Set(int playerID, String propertyName, Object value)
     }
   }
 
-  private static void Help(PlayerChatEvent event, EpicZonePlayer ezp, int playerID)
+  private static void Help(PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneEdit)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
     {
       SendMessage(event, "You are currently in Edit mode. The following commands are available.");
       SendMessage(event, "/zone name [value] - Sets the name of the zone you are currently editing.");
@@ -562,19 +562,19 @@ private static void Set(int playerID, String propertyName, Object value)
       SendMessage(event, "/zone delete - Deletes the zone you are currently editing.");
       SendMessage(event, "/zone save - Saves all changes for the current zone you are editing, and dumps you out of edit mode.");
     }
-    else if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDraw)
+    else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw)
     {
       SendMessage(event, "You are currently in Draw mode. The following commands are available.");
       SendMessage(event, "/zone save - Saves the point data you have drawn and puts you into Edit mode.");
       SendMessage(event, "/zone cancel - Discards all changes for the current zone you are editing and dumps you out of Draw and Edit mode.");
     }
-    else if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDrawConfirm)
+    else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDrawConfirm)
     {
       SendMessage(event, "You are currently in Draw Confirm mode. The following commands are available.");
       SendMessage(event, "/zone confirm - Clears point data for the current zone and puts you into Draw mode.");
       SendMessage(event, "/zone cancel - Puts you back into EditMode.");
     }
-    else if (ezp.getMode() == EpicZonePlayer.EpicZoneMode.ZoneDrawConfirm)
+    else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDrawConfirm)
     {
       SendMessage(event, "You are currently in Delete Confirm mode. The following commands are available.");
       SendMessage(event, "/zone confirm - Deletes the zone you are currently editing.");

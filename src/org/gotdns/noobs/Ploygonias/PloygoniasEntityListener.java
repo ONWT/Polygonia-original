@@ -1,4 +1,4 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -6,9 +6,9 @@ import org.bukkit.event.entity.EntityDamageByProjectileEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityListener;
 
-public class EpicZonesEntityListener extends EntityListener
+public class PloygoniasEntityListener extends EntityListener
 {
-  public EpicZonesEntityListener(EpicZones instance)
+  public PloygoniasEntityListener(Ploygonias instance)
   {
   }
 
@@ -18,8 +18,8 @@ public class EpicZonesEntityListener extends EntityListener
     {
       if ((isPlayer(event.getEntity())) && (isPlayer(event.getDamager())))
       {
-        EpicZonePlayer ezp = General.getPlayer(event.getEntity().getEntityId());
-        EpicZone zone = ezp.getCurrentZone();
+        PloygoniaPlayer ezp = General.getPlayer(event.getEntity().getEntityId());
+        Ploygonia zone = ezp.getCurrentZone();
         if (zone != null)
         {
           if (!zone.hasPVP())
@@ -37,8 +37,8 @@ public class EpicZonesEntityListener extends EntityListener
     {
       if ((isPlayer(event.getEntity())) && (isPlayer(event.getDamager())))
       {
-        EpicZonePlayer ezp = General.getPlayer(event.getEntity().getEntityId());
-        EpicZone zone = ezp.getCurrentZone();
+        PloygoniaPlayer ezp = General.getPlayer(event.getEntity().getEntityId());
+        Ploygonia zone = ezp.getCurrentZone();
         if (zone != null)
         {
           if (!zone.hasPVP())

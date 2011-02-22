@@ -1,12 +1,12 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.util.Calendar;
 import java.util.Date;
 import org.bukkit.Location;
 
-public class EpicZonePlayer
+public class PloygoniaPlayer
 {
-  private EpicZone currentZone;
+  private Ploygonia currentZone;
   private int entityID;
   private String name;
   private Location currentLocation;
@@ -14,12 +14,12 @@ public class EpicZonePlayer
   private int distanceFromCenter;
   private boolean teleporting = false;
   private Date lastCheck = new Date();
-  private EpicZoneMode mode = EpicZoneMode.None;
-  private EpicZone editZone = null;
+  private PloygoniaMode mode = PloygoniaMode.None;
+  private Ploygonia editZone = null;
   private boolean pastBorder = false;
   private Date enteredZone = new Date();
 
-  public EpicZone getCurrentZone() {
+  public Ploygonia getCurrentZone() {
     return this.currentZone; } 
   public int getEntityID() { return this.entityID; } 
   public String getName() { return this.name; } 
@@ -28,8 +28,8 @@ public class EpicZonePlayer
   public Date getLastCheck() { return this.lastCheck; } 
   public int getDistanceFromCenter() { return this.distanceFromCenter; } 
   public boolean isTeleporting() { return this.teleporting; } 
-  public EpicZoneMode getMode() { return this.mode; } 
-  public EpicZone getEditZone() { return this.editZone; } 
+  public PloygoniaMode getMode() { return this.mode; } 
+  public Ploygonia getEditZone() { return this.editZone; } 
   public boolean getPastBorder() { return this.pastBorder; } 
   public Date getEnteredZone() { return this.enteredZone;
   }
@@ -44,23 +44,23 @@ public class EpicZonePlayer
     this.entityID = value;
   }
 
-  public void setMode(EpicZoneMode value)
+  public void setMode(PloygoniaMode value)
   {
     this.mode = value;
   }
 
-  public void setEditZone(EpicZone value)
+  public void setEditZone(Ploygonia value)
   {
     this.editZone = value;
   }
 
-  public EpicZonePlayer(int entityID, String name)
+  public PloygoniaPlayer(int entityID, String name)
   {
     this.entityID = entityID;
     this.name = name;
   }
 
-  public void setCurrentZone(EpicZone z)
+  public void setCurrentZone(Ploygonia z)
   {
     this.currentZone = z;
     this.enteredZone = new Date();
@@ -95,7 +95,7 @@ public class EpicZonePlayer
     this.teleporting = value;
   }
 
-  public static enum EpicZoneMode
+  public static enum PloygoniaMode
   {
     None, ZoneDraw, ZoneEdit, ZoneDrawConfirm, ZoneDeleteConfirm;
   }

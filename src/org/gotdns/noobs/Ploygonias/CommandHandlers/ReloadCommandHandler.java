@@ -1,15 +1,15 @@
-package com.bukkit.epicsaga.EpicZones.CommandHandlers;
+package org.gotdns.noobs.Ploygonias.CommandHandlers;
 
 import org.bukkit.event.player.PlayerChatEvent;
+import org.gotdns.noobs.Ploygonias.General;
+import org.gotdns.noobs.Ploygonias.Ploygonias;
 
-import com.bukkit.epicsaga.EpicZones.EpicZones;
-import com.bukkit.epicsaga.EpicZones.General;
 
 public class ReloadCommandHandler
 {
-  public static void Process(String[] data, PlayerChatEvent event, EpicZones plugin)
+  public static void Process(String[] data, PlayerChatEvent event, Ploygonias plugin)
   {
-    if (EpicZones.permissions.has(event.getPlayer(), "epiczones.admin"))
+    if (Ploygonias.permissions.has(event.getPlayer(), "epiczones.admin"))
     {
       try
       {
@@ -17,7 +17,7 @@ public class ReloadCommandHandler
         General.config.load();
         General.config.save();
         General.loadZones(null);
-        event.getPlayer().sendMessage("EpicZones Reloaded.");
+        event.getPlayer().sendMessage("Ploygonias Reloaded.");
         event.setCancelled(true);
       }
       catch (Exception e)

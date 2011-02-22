@@ -1,4 +1,4 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.awt.Point;
 
@@ -9,11 +9,11 @@ import org.bukkit.event.vehicle.VehicleListener;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.util.Vector;
 
-public class EpicZonesVehicleListener extends VehicleListener
+public class PloygoniasVehicleListener extends VehicleListener
 {
   private final Vector zero = new Vector(0, 0, 0);
 
-  public EpicZonesVehicleListener(EpicZones instance)
+  public PloygoniasVehicleListener(Ploygonias instance)
   {
   }
 
@@ -24,7 +24,7 @@ public class EpicZonesVehicleListener extends VehicleListener
 
     if (passenger != null)
     {
-      EpicZonePlayer ezp = General.getPlayer(passenger.getEntityId());
+      PloygoniaPlayer ezp = General.getPlayer(passenger.getEntityId());
 
       if (ezp != null)
       {
@@ -54,9 +54,9 @@ public class EpicZonesVehicleListener extends VehicleListener
     }
   }
 
-  public static boolean VehicleWithinZoneLogic(Player player, EpicZonePlayer ezp, int playerHeight, Point playerPoint)
+  public static boolean VehicleWithinZoneLogic(Player player, PloygoniaPlayer ezp, int playerHeight, Point playerPoint)
   {
-    EpicZone foundZone = null;
+    Ploygonia foundZone = null;
     String worldName = player.getWorld().getName();
 
     if (General.pointWithinBorder(playerPoint, player))
@@ -97,9 +97,9 @@ public class EpicZonesVehicleListener extends VehicleListener
     return true;
   }
 
-  private static EpicZone FindZone(Player player, EpicZonePlayer ezp, int playerHeight, Point playerPoint, String worldName)
+  private static Ploygonia FindZone(Player player, PloygoniaPlayer ezp, int playerHeight, Point playerPoint, String worldName)
   {
-    EpicZone result = null;
+    Ploygonia result = null;
 
     if (ezp.getCurrentZone() != null)
     {
@@ -109,7 +109,7 @@ public class EpicZonesVehicleListener extends VehicleListener
       {
         if (!resultTag.equalsIgnoreCase(ezp.getCurrentZone().getTag()))
         {
-          result = (EpicZone)General.myZones.get(resultTag);
+          result = (Ploygonia)General.myZones.get(resultTag);
         }
       }
       else

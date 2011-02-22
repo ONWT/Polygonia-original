@@ -1,4 +1,4 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.awt.Point;
 import java.util.Date;
@@ -8,26 +8,26 @@ import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockListener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class EpicZonesBlockListener extends BlockListener
+public class PloygoniasBlockListener extends BlockListener
 {
   private static final String NO_PERM_DESTROY = "You do not have permissions to destroy in this zone.";
   private static final String NO_PERM_DESTROY_BORDER = "You do not have permissions to destroy outside the border of the map.";
   private static final String NO_PERM_BUILD = "You do not have permissions to build in this zone.";
   private static final String NO_PERM_BUILD_BORDER = "You do not have permissions to build outside the border of the map.";
 
-  public EpicZonesBlockListener(EpicZones plugin)
+  public PloygoniasBlockListener(Ploygonias plugin)
   {
   }
 
   public void onBlockDamage(BlockDamageEvent event)
   {
     Player player = event.getPlayer();
-    EpicZonePlayer ezp = General.getPlayer(player.getName());
+    PloygoniaPlayer ezp = General.getPlayer(player.getName());
     Point blockPoint = new Point(event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockZ());
     String worldName = player.getWorld().getName();
     int blockHeight = event.getBlock().getLocation().getBlockY();
     boolean hasPerms = false;
-    EpicZone currentZone = null;
+    Ploygonia currentZone = null;
 
     if (General.pointWithinBorder(blockPoint, player))
     {
@@ -56,13 +56,13 @@ public class EpicZonesBlockListener extends BlockListener
   public void onBlockPlace(BlockPlaceEvent event)
   {
     Player player = event.getPlayer();
-    EpicZonePlayer ezp = General.getPlayer(player.getName());
+    PloygoniaPlayer ezp = General.getPlayer(player.getName());
     Point blockPoint = new Point(event.getBlock().getLocation().getBlockX(), event.getBlock().getLocation().getBlockZ());
     String worldName = player.getWorld().getName();
     int blockHeight = event.getBlock().getLocation().getBlockY();
     boolean hasPerms = false;
 
-    EpicZone currentZone = null;
+    Ploygonia currentZone = null;
 
     if (General.pointWithinBorder(blockPoint, player))
     {

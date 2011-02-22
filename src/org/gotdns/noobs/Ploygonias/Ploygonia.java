@@ -1,4 +1,4 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.awt.Point;
 import java.awt.Polygon;
@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.bukkit.entity.Player;
 
-public class EpicZone
+public class Ploygonia
 {
   private String tag = "";
   private String name = "";
@@ -24,11 +24,11 @@ public class EpicZone
   private Rectangle boundingBox = new Rectangle();
   private String enterText = "";
   private String exitText = "";
-  private EpicZone parent = null;
-  private Map<String, EpicZone> children = new HashMap<String, EpicZone>();
+  private Ploygonia parent = null;
+  private Map<String, Ploygonia> children = new HashMap<String, Ploygonia>();
   private Set<String> childrenNames = new HashSet<String>();
-  private Set<EpicZonePlayer> owner = new HashSet<EpicZonePlayer>();
-  private Set<EpicZonePlayer> member = new HashSet<EpicZonePlayer>();
+  private Set<PloygoniaPlayer> owner = new HashSet<PloygoniaPlayer>();
+  private Set<PloygoniaPlayer> member = new HashSet<PloygoniaPlayer>();
   private boolean hasChildrenFlag = false;
   private boolean hasParentFlag = false;
   private boolean hasPVP = false;
@@ -38,10 +38,10 @@ public class EpicZone
   private int regenDelay = 0;
   private int regenInterval = 500;
 
-  public EpicZone() {
+  public Ploygonia() {
   }
 
-  public EpicZone(EpicZone prime) {
+  public Ploygonia(Ploygonia prime) {
     this.tag = prime.tag;
     this.name = prime.name;
     this.floor = prime.floor;
@@ -64,7 +64,7 @@ public class EpicZone
     this.regenInterval = prime.regenInterval;
   }
 
-  public EpicZone(String zoneData)
+  public Ploygonia(String zoneData)
   {
     String[] split = zoneData.split("\\|");
 
@@ -146,24 +146,24 @@ public String getTag() {
   public String getEnterText() { return this.enterText; } 
   public String getExitText() { return this.exitText; } 
   public String getWorld() { return this.world; } 
-  public EpicZone getParent() { return this.parent; } 
-  public Map<String, EpicZone> getChildren() { return this.children; } 
+  public Ploygonia getParent() { return this.parent; } 
+  public Map<String, Ploygonia> getChildren() { return this.children; } 
   public Set<String> getChildrenTags() { return this.childrenNames; } 
   public boolean isOwner(Player p) {return this.owner.contains(p); }
   public boolean isMember(Player p) {return this.member.contains(p); }
-  public void addOwner(EpicZonePlayer epicZonePlayer) {this.owner.add(epicZonePlayer); }
-  public void addMember(EpicZonePlayer p) {this.member.add(p); }
-  public void delOwner(EpicZonePlayer epicZonePlayer) {this.owner.remove(epicZonePlayer); }
-  public void delMember(EpicZonePlayer p) {this.member.remove(p); }
-  public Set<EpicZonePlayer> getOwners(){return owner;}
-  public Set<EpicZonePlayer> getMembers(){return member;}
+  public void addOwner(PloygoniaPlayer epicZonePlayer) {this.owner.add(epicZonePlayer); }
+  public void addMember(PloygoniaPlayer p) {this.member.add(p); }
+  public void delOwner(PloygoniaPlayer epicZonePlayer) {this.owner.remove(epicZonePlayer); }
+  public void delMember(PloygoniaPlayer p) {this.member.remove(p); }
+  public Set<PloygoniaPlayer> getOwners(){return owner;}
+  public Set<PloygoniaPlayer> getMembers(){return member;}
   public boolean hasChildren() { return this.hasChildrenFlag; } 
   public boolean hasParent() { return this.hasParentFlag; } 
   public boolean hasRegen() { return this.hasRegen; }
 
-  public void addChild(EpicZone childZone)
+  public void addChild(Ploygonia childZone)
   {
-    if (this.children == null) this.children = new HashMap<String, EpicZone>();
+    if (this.children == null) this.children = new HashMap<String, Ploygonia>();
     this.children.put(childZone.getTag(), childZone);
   }
 
@@ -223,7 +223,7 @@ public String getTag() {
     return result;
   }
 
-  public void setParent(EpicZone parent)
+  public void setParent(Ploygonia parent)
   {
     this.parent = parent;
     this.hasParentFlag = true;

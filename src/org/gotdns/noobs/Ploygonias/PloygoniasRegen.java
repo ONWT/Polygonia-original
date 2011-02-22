@@ -1,16 +1,16 @@
-package com.bukkit.epicsaga.EpicZones;
+package org.gotdns.noobs.Ploygonias;
 
 import java.util.ArrayList;
 
 import org.bukkit.entity.Player;
 
-public class EpicZonesRegen
+public class PloygoniasRegen
   implements Runnable
 {
-  private final EpicZones plugin;
+  private final Ploygonias plugin;
   private final int MAX_HEALTH = 20;
 
-  EpicZonesRegen(EpicZones instance)
+  PloygoniasRegen(Ploygonias instance)
   {
     this.plugin = instance;
   }
@@ -23,10 +23,10 @@ public class EpicZonesRegen
     {
       if (player.getHealth() > MAX_HEALTH)
         continue;
-      EpicZonePlayer ezp = General.getPlayer(player.getEntityId());
+      PloygoniaPlayer ezp = General.getPlayer(player.getEntityId());
       if (ezp == null)
         continue;
-      EpicZone zone = ezp.getCurrentZone();
+      Ploygonia zone = ezp.getCurrentZone();
       if (zone == null)
         continue;
       if (!zone.timeToRegen())
@@ -46,7 +46,7 @@ public class EpicZonesRegen
 
     for (int i = 0; i < regenZoneTags.size(); i++)
     {
-      ((EpicZone)General.myZones.get(regenZoneTags.get(i))).Regen();
+      ((Ploygonia)General.myZones.get(regenZoneTags.get(i))).Regen();
     }
   }
 }
