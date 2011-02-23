@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/noobs/Downloads/snakeyaml-1.7.jar"/>
-	<classpathentry kind="lib" path="/Users/noobs/Downloads/Permissions.jar"/>
+	<classpathentry including="**/*.java" kind="src" output="Releases/classes" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="lib" path="/Users/noobs/Downloads/bukkit-0.0.1-SNAPSHOT (1).jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="lib" path="/Users/noobs/Documents/Development/workspace/snakeyaml-1.8.jar"/>
+	<classpathentry kind="lib" path="/Users/noobs/Downloads/Permissions.jar"/>
+	<classpathentry kind="output" path="Releases/classes"/>
 </classpath>

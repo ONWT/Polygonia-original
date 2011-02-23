@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.bukkit.entity.Player;
-
 public class Ploygonia
 {
   //TODO: Make singleton out off this class
@@ -151,7 +149,7 @@ public String getTag() {
   public Ploygonia getParent() { return this.parent; } 
   public Map<String, Ploygonia> getChildren() { return this.children; } 
   public Set<String> getChildrenTags() { return this.childrenNames; } 
-  public boolean isOwner(PloygoniaPlayer ezp) {return this.owner.contains(ezp); }
+  public boolean isOwner(PloygoniaPlayer p) {return this.owner.contains(p); }
   public boolean isMember(PloygoniaPlayer p) {return this.member.contains(p); }
   public void addOwner(PloygoniaPlayer epicZonePlayer) {this.owner.add(epicZonePlayer); }
   public void addMember(PloygoniaPlayer p) {this.member.add(p); }

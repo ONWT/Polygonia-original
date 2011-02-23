@@ -97,6 +97,6 @@ public class PloygoniaPlayer
 
   public static enum PloygoniaMode
   {
-    None, ZoneDraw, ZoneEdit, ZoneDrawConfirm, ZoneDeleteConfirm;
+    None, ZoneDraw, ZoneEdit, ZoneDrawConfirm, ZoneDeleteConfirm, ZoneDrawChild;
   }
 }

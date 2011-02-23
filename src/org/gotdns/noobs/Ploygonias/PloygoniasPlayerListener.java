@@ -1,6 +1,7 @@
 package org.gotdns.noobs.Ploygonias;
 
 import java.awt.Point;
+import java.awt.Polygon;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -241,11 +242,27 @@ public class PloygoniasPlayerListener extends PlayerListener
     }
     else if (event.getPlayer().getItemInHand().getTypeId() == General.config.zoneTool)
     {
-      if (General.getPlayer(event.getPlayer().getEntityId()).getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw)
+        Player player = event.getPlayer();
+        PloygoniaPlayer ezp = General.getPlayer(player.getName());
+    	PloygoniaPlayer.PloygoniaMode mode = General.getPlayer(event.getPlayer().getEntityId()).getMode();
+    	String worldName = player.getWorld().getName();
+        int blockHeight = event.getBlockClicked().getLocation().getBlockY();
+        //The zone that is currently being edited is fetched from the list
+        Ploygonia editzone =General.getPlayer(event.getPlayer().getEntityId()).getEditZone();
+      if (mode == PloygoniaPlayer.PloygoniaMode.ZoneDraw||mode == PloygoniaPlayer.PloygoniaMode.ZoneDrawChild)
       {
-        Point point = new Point(event.getBlockClicked().getLocation().getBlockX(), event.getBlockClicked().getLocation().getBlockZ());
-        General.getPlayer(event.getPlayer().getEntityId()).getEditZone().addPoint(point);
-        event.getPlayer().sendMessage("Point " + point.x + ":" + point.y + " added to zone.");
+    	  Point point = new Point(event.getBlockClicked().getLocation().getBlockX(), event.getBlockClicked().getLocation().getBlockZ());
+    	  if(mode == PloygoniaPlayer.PloygoniaMode.ZoneDrawChild)
+    	  {
+    		  if(General.getZoneForPoint(player, ezp, blockHeight, point, worldName)==editzone.getParent())
+    		  {
+    			  editzone.addPoint(point);
+        		  event.getPlayer().sendMessage("Point " + point.x + ":" + point.y + " added to zone.");
+    		  }
+    	  }else{
+    		  editzone.addPoint(point);
+    		  event.getPlayer().sendMessage("Point " + point.x + ":" + point.y + " added to zone.");
+    	  }
       }
     }
   }
