@@ -2,7 +2,11 @@
 <classpath>
 	<classpathentry including="**/*.java" kind="src" output="Releases/classes" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
-	<classpathentry kind="lib" path="/Users/noobs/Downloads/bukkit-0.0.1-SNAPSHOT (1).jar"/>
+	<classpathentry kind="lib" path="/Users/noobs/Downloads/bukkit-0.0.1-SNAPSHOT (1).jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://javadoc.lukegb.com/Bukkit/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="/Users/noobs/Documents/Development/workspace/snakeyaml-1.8.jar"/>
 	<classpathentry kind="lib" path="/Users/noobs/Downloads/Permissions.jar"/>
 	<classpathentry kind="output" path="Releases/classes"/>

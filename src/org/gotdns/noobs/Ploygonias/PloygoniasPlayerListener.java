@@ -257,7 +257,10 @@ public class PloygoniasPlayerListener extends PlayerListener
     		  if(General.getZoneForPoint(player, ezp, blockHeight, point, worldName)==editzone.getParent())
     		  {
     			  editzone.addPoint(point);
-        		  event.getPlayer().sendMessage("Point " + point.x + ":" + point.y + " added to zone.");
+        		  event.getPlayer().sendMessage("Point " + point.x + ":" + point.y + " added to child zone.");
+    		  }else
+    		  {
+    			 event.getPlayer().sendMessage("Point out side of parrent zone!");
     		  }
     	  }else{
     		  editzone.addPoint(point);

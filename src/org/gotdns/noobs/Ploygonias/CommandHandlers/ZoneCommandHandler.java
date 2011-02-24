@@ -11,10 +11,15 @@ public class ZoneCommandHandler
 {
   public static void Process(String[] data, PlayerChatEvent event)
   {
+	event.setCancelled(true);
     PloygoniaPlayer ezp = General.getPlayer(event.getPlayer().getEntityId());
     int playerID = ezp.getEntityID();
-    if (Ploygonias.permissions.has(event.getPlayer(), "epiczones.admin"))
-    {
+	 SendMessage(event, "inside of prosessing");
+    //if (Ploygonias.permissions.has(event.getPlayer(), "polygonias.admin"))
+     if(true)
+	 {
+   	 SendMessage(event, "inside of admin");
+   	SendMessage(event, "User:"+event.getPlayer().getName());
       if (data.length > 1)
       {
         if (data[1].equalsIgnoreCase("create")) Create(data, event, ezp, playerID);
@@ -38,13 +43,15 @@ public class ZoneCommandHandler
         else if (data[1].equalsIgnoreCase("world")) World(data, event, ezp, playerID);
         else if (data[1].equalsIgnoreCase("cancel")) Cancel(data, event, ezp, playerID);
         else if (data[1].equalsIgnoreCase("delete")) Delete(data, event, ezp, playerID); else {
+       	 SendMessage(event, "inside of help admin");
           Help(event, ezp, playerID);
         }
       }
       else
         Help(event, ezp, playerID);
-    }else if(ezp.getCurrentZone().isOwner(ezp))
+    }else if(ezp.getCurrentZone()!=null)
     {
+    	if(ezp.getCurrentZone().isOwner(ezp))
     	if (data.length > 1)
         {
           if (data[1].equalsIgnoreCase("save")) Save(data, event, ezp, playerID);
@@ -66,6 +73,7 @@ public class ZoneCommandHandler
           else if (data[1].equalsIgnoreCase("cancel")) Cancel(data, event, ezp, playerID);
           else if (data[1].equalsIgnoreCase("delete")) Delete(data, event, ezp, playerID);
           else {
+        		 SendMessage(event, "inside of help owner");
             Help(event, ezp, playerID);
           }
         }
@@ -190,7 +198,7 @@ private static void Set(int playerID, String propertyName, Object value)
           zone.setTag(tag);
           zone.setName(tag);
           Set(playerID, "editzone", zone);
-          Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDrawChild);
+          Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDraw);
           Set(playerID, "world", event.getPlayer().getWorld().getName());
           SendMessage(event, "Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
         }
@@ -228,7 +236,7 @@ private static void Set(int playerID, String propertyName, Object value)
 	        		zone.setTag(tag);
 	        		zone.setName(tag);
 	        		Set(playerID, "editzone", zone);
-	        		Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDraw);
+	        		Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDrawChild);
 	        		Set(playerID, "world", event.getPlayer().getWorld().getName());
 	        		SendMessage(event, "Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
 	        	}

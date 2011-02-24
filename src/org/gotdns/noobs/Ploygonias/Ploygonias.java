@@ -60,8 +60,7 @@ public class Ploygonias extends JavaPlugin
       {
         General.addPlayer(p.getEntityId(), p.getName());
       }
-
-      System.out.println(pdfFile.getName() + " version " + pdfFile.getVersion() + " is enabled.");
+      System.out.println("Enbeled plugin");
     }
     catch (Throwable e) {
       System.out.println("[" + pdfFile.getName() + "]" + " error starting: " + 
@@ -86,16 +85,19 @@ public class Ploygonias extends JavaPlugin
     this.debugees.put(player, Boolean.valueOf(value));
   }
 
-  public void setupPermissions() throws Exception {
-    Plugin test = getServer().getPluginManager().getPlugin("Permissions");
-    if (test != null)
-    {
-      if (!test.isEnabled()) getServer().getPluginManager().enablePlugin(test);
-      permissions = ((Permissions)test).getHandler();
-    }
-    else {
-      throw new Exception("Permission plugin not available.");
-    }
+  public void setupPermissions() {
+      Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
+
+      if (this.permissions == null) {
+          if (test != null) {
+              System.out.println("Loaded permission plugin");
+              this.getServer().getPluginManager().enablePlugin(test); // This line.
+              this.permissions = ((Permissions)test).getHandler();
+          } else {
+              System.out.println("Failed to load permission plugin");
+              getServer().getPluginManager().disablePlugin(this);
+          }
+      }
   }
 
   private void checkConfigDir() throws Exception
