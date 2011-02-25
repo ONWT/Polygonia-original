@@ -61,7 +61,7 @@ public class ZoneCommandHandler
           else if (data[1].equalsIgnoreCase("addmember")) addmember(data, event, ezp, playerID);
           else if (data[1].equalsIgnoreCase("removeowner")) removeowner(data, event, ezp, playerID);
           else if (data[1].equalsIgnoreCase("removemember")) removemember(data, event, ezp, playerID);
-          else if (data[1].equalsIgnoreCase("createChild")) CreateChild(data, event, ezp, playerID,false);
+          else if (data[1].equalsIgnoreCase("createchild")) CreateChild(data, event, ezp, playerID,false);
           else if (data[1].equalsIgnoreCase("removechildren")) RemoveChildren(data, event, ezp, playerID);
           else if (data[1].equalsIgnoreCase("name")) Name(data, event, ezp, playerID);
           else if (data[1].equalsIgnoreCase("enter")) EnterMessage(data, event, ezp, playerID);
@@ -232,8 +232,11 @@ private static void Set(int playerID, String propertyName, Object value)
 	  	          SendMessage(event, "You do not have permission to create a child zone here");
 	        	}else{
 	        		Ploygonia zone = new Ploygonia();
+	        		Ploygonia pzone = General.myZones.get(ptag);
 	        		zone.setTag(tag);
 	        		zone.setName(tag);
+	        		zone.setParent(pzone);
+	        		pzone.addChild(zone);
 	        		Set(playerID, "editzone", zone);
 	        		Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDrawChild);
 	        		Set(playerID, "world", event.getPlayer().getWorld().getName());
@@ -244,6 +247,28 @@ private static void Set(int playerID, String propertyName, Object value)
 	        {
 	          SendMessage(event, "A zone already exists with the tag [" + tag + "]");
 	        }
+	      }
+	      else if(ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneEdit)
+	      {
+
+		        String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
+		        String ptag = ezp.getEditZone().getTag();
+		        if (General.myZones.get(tag) == null)
+		        {
+		        	if(!Admin&&!General.myZones.get(ptag).isOwner(ezp))
+		        	{
+		  	          SendMessage(event, "You do not have permission to create a child zone here");
+		        	}else{
+		        		Ploygonia zone = new Ploygonia();
+		        		zone.setTag(tag);
+		        		zone.setName(tag);
+		        		zone.setParent(General.myZones.get(ptag));
+		        		Set(playerID, "editzone", zone);
+		        		Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDrawChild);
+		        		Set(playerID, "world", event.getPlayer().getWorld().getName());
+		        		SendMessage(event, "Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
+		        	}
+		        }
 	      }
 	      else
 	      {
@@ -258,7 +283,7 @@ private static void Set(int playerID, String propertyName, Object value)
   
   private static void Save(String[] data, PlayerChatEvent event, PloygoniaPlayer ezp, int playerID)
   {
-    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw)
+    if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw||ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDrawChild)
     {
       if (ezp.getEditZone().getPolygon().npoints > 2)
       {
@@ -636,6 +661,12 @@ private static void Set(int playerID, String propertyName, Object value)
       SendMessage(event, "/zone save - Saves all changes for the current zone you are editing, and dumps you out of edit mode.");
     }
     else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDraw)
+    {
+      SendMessage(event, "You are currently in Draw mode. The following commands are available.");
+      SendMessage(event, "/zone save - Saves the point data you have drawn and puts you into Edit mode.");
+      SendMessage(event, "/zone cancel - Discards all changes for the current zone you are editing and dumps you out of Draw and Edit mode.");
+    }
+    else if (ezp.getMode() == PloygoniaPlayer.PloygoniaMode.ZoneDrawChild)
     {
       SendMessage(event, "You are currently in Draw mode. The following commands are available.");
       SendMessage(event, "/zone save - Saves the point data you have drawn and puts you into Edit mode.");
