@@ -15,11 +15,10 @@ public class ZoneCommandHandler
     PloygoniaPlayer ezp = General.getPlayer(event.getPlayer().getEntityId());
     int playerID = ezp.getEntityID();
 	 SendMessage(event, "inside of prosessing");
-    //if (Ploygonias.permissions.has(event.getPlayer(), "polygonias.admin"))
-     if(true)
+	 if (Ploygonias.permissions.has(event.getPlayer(), "polygonias.admin")||event.getPlayer().isOp())
+     //if(true)
 	 {
    	 SendMessage(event, "inside of admin");
-   	SendMessage(event, "User:"+event.getPlayer().getName());
       if (data.length > 1)
       {
         if (data[1].equalsIgnoreCase("create")) Create(data, event, ezp, playerID);

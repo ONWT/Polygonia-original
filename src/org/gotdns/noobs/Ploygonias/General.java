@@ -178,6 +178,7 @@ public class General
     try
     {
       String data = BuildZoneData();
+      System.out.println("Data to save: "+data);
       Writer output = new BufferedWriter(new FileWriter(myFile, false));
       try
       {
