@@ -16,7 +16,7 @@ public class ZoneCommandHandler
     int playerID = ezp.getEntityID();
 	 SendMessage(event, "inside of prosessing");
 	 if (Ploygonias.permissions.has(event.getPlayer(), "polygonias.admin")||event.getPlayer().isOp())
-     //if(true)
+     //if(true)   
 	 {
    	 SendMessage(event, "inside of admin"); 
       if (data.length > 1)
