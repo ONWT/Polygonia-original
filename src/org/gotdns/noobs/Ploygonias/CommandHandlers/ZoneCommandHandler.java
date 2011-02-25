@@ -18,7 +18,7 @@ public class ZoneCommandHandler
 	 if (Ploygonias.permissions.has(event.getPlayer(), "polygonias.admin")||event.getPlayer().isOp())
      //if(true)
 	 {
-   	 SendMessage(event, "inside of admin");
+   	 SendMessage(event, "inside of admin"); 
       if (data.length > 1)
       {
         if (data[1].equalsIgnoreCase("create")) Create(data, event, ezp, playerID);
