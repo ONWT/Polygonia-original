@@ -264,6 +264,7 @@ private static void Set(int playerID, String propertyName, Object value)
 		        		zone.setName(tag);
 		        		zone.setParent(General.myZones.get(ptag));
 		        		Set(playerID, "editzone", zone);
+		        		//test
 		        		Set(playerID, "mode", PloygoniaPlayer.PloygoniaMode.ZoneDrawChild);
 		        		Set(playerID, "world", event.getPlayer().getWorld().getName());
 		        		SendMessage(event, "Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
