@@ -73,7 +73,7 @@ public class General
     {
       if (zone == null)
       {
-        return true;
+    	  return getDefaultPerm(flag);
       }
       if (zone.isOwner(General.getPlayer(player.getEntityId())))
       {
@@ -90,17 +90,22 @@ public class General
       }
       if (Ploygonias.permissions.has(player, "epiczones." + zone.getTag() + "." + flag))
       {
+    	player.sendMessage("permission allowed");
         return true;
       }
       if (zone.hasParent())
       {
+    	  player.sendMessage("has parrent");
+    	  player.sendMessage(zone.getParent().getName());
         return hasPermissions(player, zone.getParent(), flag);
       }
 
-      return getDefaultPerm(flag);
+      return false;
     }
-
-    return true;
+    else
+    {
+    	return true;
+    }
   }
 
   private static boolean getDefaultPerm(String flag)
@@ -222,18 +227,18 @@ public class General
 
   private static String BuildMembers(Ploygonia z) {
 		String result="";
-		for(PloygoniaPlayer p:z.getMembers())
+		for(String p:z.getMembers())
 		{
-			result=result+" "+p.getName();
+			result=result+" "+p;
 		}
 		return result;
   }
 
   private static String BuildOwners(Ploygonia z) {
 	String result="";
-	for(PloygoniaPlayer p:z.getOwners())
+	for(String p:z.getOwners())
 	{
-		result=result+" "+p.getName();
+		result=result+" "+p;
 	}
 	return result;
   }

@@ -64,7 +64,8 @@ public class Ploygonias extends JavaPlugin
     }
     catch (Throwable e) {
       System.out.println("[" + pdfFile.getName() + "]" + " error starting: " + 
-        e.getMessage() + " Disabling plugin");
+        e.getMessage()+" Cause: "+e.getCause()+ " Disabling plugin");
+      e.printStackTrace();
       getServer().getPluginManager().disablePlugin(this);
     }
   }

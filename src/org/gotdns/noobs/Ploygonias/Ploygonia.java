@@ -7,9 +7,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * @author noobs
+ *
+ */
 public class Ploygonia
 {
   //TODO: Make singleton out off this class
@@ -26,9 +31,9 @@ public class Ploygonia
   private Ploygonia parent = null;
   private Map<String, Ploygonia> children = new HashMap<String, Ploygonia>();
   private Set<String> childrenNames = new HashSet<String>();
-  private Set<PloygoniaPlayer> owner = new HashSet<PloygoniaPlayer>();
-  private Set<PloygoniaPlayer> member = new HashSet<PloygoniaPlayer>();
-  private boolean hasChildrenFlag = false;
+  private Set<String> owner = new HashSet<String>();
+  private Set<String> member = new HashSet<String>();
+  private LinkedList<Point> pointlist =new LinkedList<Point>();
   private boolean hasParentFlag = false;
   private boolean hasPVP = false;
   private boolean hasRegen = false;
@@ -54,7 +59,6 @@ public class Ploygonia
     this.parent = prime.parent;
     this.children = prime.children;
     this.childrenNames = prime.childrenNames;
-    this.hasChildrenFlag = prime.hasChildrenFlag;
     this.hasParentFlag = prime.hasParentFlag;
     this.hasPVP = prime.hasPVP;
     this.hasRegen = prime.hasRegen;
@@ -88,7 +92,7 @@ public class Ploygonia
 
       System.out.println("Created Zone [" + this.name + "]");
     }
-    if (split.length == 12)
+    if (split.length > 10)
     {
       this.tag = split[0].replaceAll("[^a-zA-Z0-9]", "");
       this.world = split[1];
@@ -119,7 +123,7 @@ public class Ploygonia
 
 	      for (int i = 0; i < dataList.length; i++)
 	      {
-	    	  this.member.add(General.getPlayer(dataList[1]));
+	    	  this.member.add(dataList[1]);
 	      }
 	    }
 }
@@ -131,7 +135,7 @@ private void buildOwners(String data) {
 		
 		for (int i = 0; i < dataList.length; i++)
 		{
-			this.member.add(General.getPlayer(dataList[1]));
+			this.owner.add(dataList[1]);
 		}
 	}
 }
@@ -149,15 +153,24 @@ public String getTag() {
   public Ploygonia getParent() { return this.parent; } 
   public Map<String, Ploygonia> getChildren() { return this.children; } 
   public Set<String> getChildrenTags() { return this.childrenNames; } 
-  public boolean isOwner(PloygoniaPlayer p) {return this.owner.contains(p); }
-  public boolean isMember(PloygoniaPlayer p) {return this.member.contains(p); }
-  public void addOwner(PloygoniaPlayer epicZonePlayer) {this.owner.add(epicZonePlayer); }
-  public void addMember(PloygoniaPlayer p) {this.member.add(p); }
-  public void delOwner(PloygoniaPlayer epicZonePlayer) {this.owner.remove(epicZonePlayer); }
+  public boolean isOwner(PloygoniaPlayer p) {return this.owner.contains(p.getName()); }
+  public boolean isMember(PloygoniaPlayer p) {return this.member.contains(p.getName()); }
+  public void addOwner(PloygoniaPlayer epicZonePlayer) {this.owner.add(epicZonePlayer.getName()); }
+  public void addMember(PloygoniaPlayer p) {this.member.add(p.getName()); }
+  public void delOwner(PloygoniaPlayer epicZonePlayer) {this.owner.remove(epicZonePlayer.getName()); }
   public void delMember(PloygoniaPlayer p) {this.member.remove(p); }
-  public Set<PloygoniaPlayer> getOwners(){return owner;}
-  public Set<PloygoniaPlayer> getMembers(){return member;}
-  public boolean hasChildren() { return this.hasChildrenFlag; } 
+  public Set<String> getOwners(){return owner;}
+  public Set<String> getMembers(){return member;}
+  /**
+   * Checks if the children list isEmpty and returns the opposite
+   * @return If the zone has children
+   */
+  public boolean hasChildren() {
+	  if(this.children!=null)
+		  return !this.children.isEmpty();
+	  else
+		  return false;
+	  } 
   public boolean hasParent() { return this.hasParentFlag; } 
   public boolean hasRegen() { return this.hasRegen; }
 
@@ -314,7 +327,6 @@ public String getTag() {
       for (int i = 0; i < dataList.length; i++)
       {
         this.childrenNames.add(dataList[i]);
-        this.hasChildrenFlag = true;
       }
     }
   }
@@ -391,4 +403,18 @@ public String getTag() {
     }
     return false;
   }
+
+/**
+ * @param pointlist the pointlist to set
+ */
+public void setPointlist(LinkedList<Point> pointlist) {
+	this.pointlist = pointlist;
+}
+
+/**
+ * @return the pointlist
+ */
+public LinkedList<Point> getPointlist() {
+	return pointlist;
+}
 }
