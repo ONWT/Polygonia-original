@@ -348,7 +348,7 @@ public class ZoneCommandHandler {
 				String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
 				String ptag = ezp.getEditZone().getTag();
 				if (General.myZones.get(tag) == null) {
-					if (!General.myZones.get(ptag).isOwner(ezp)) {
+					if (!Polygonias.permissions.has((Player) ezp,"epiczones.admin")||!General.myZones.get(ptag).isOwner(ezp)) {
 						SendMessage(event,
 								"You do not have permission to create a child zone here");
 					} else {
