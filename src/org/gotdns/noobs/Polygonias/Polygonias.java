@@ -50,7 +50,7 @@ public class Polygonias extends JavaPlugin {
 					Event.Priority.Monitor, this);
 			pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener,
 					Event.Priority.Monitor, this);
-			pm.registerEvent(Event.Type.PLAYER_COMMAND, this.playerListener,
+			pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, this.playerListener,
 					Event.Priority.Normal, this);
 			pm.registerEvent(Event.Type.PLAYER_ITEM, this.playerListener,
 					Event.Priority.Normal, this);
@@ -72,7 +72,7 @@ public class Polygonias extends JavaPlugin {
 			for (Player p : getServer().getOnlinePlayers()) {
 				General.addPlayer(p.getEntityId(), p.getName());
 			}
-			System.out.println("Enbeled plugin");
+			System.out.println("Enbeled plugin"+"[" + pdfFile.getName() + "]");
 		} catch (Throwable e) {
 			System.out.println("[" + pdfFile.getName() + "]"
 					+ " error starting: " + e.getMessage() + " Cause: "
@@ -84,6 +84,7 @@ public class Polygonias extends JavaPlugin {
 
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = getDescription();
+		General.SaveZones();
 		System.out.println(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is disabled.");
 	}
@@ -106,7 +107,6 @@ public class Polygonias extends JavaPlugin {
                 this.getServer().getPluginManager().enablePlugin(p);
             }
             GroupManager gm = (GroupManager) p;
-            GroupManager groupManager = gm;
             permissions = gm.getPermissionHandler();
         } else {
             this.getPluginLoader().disablePlugin(this);

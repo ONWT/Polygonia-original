@@ -58,6 +58,11 @@ public class PolygoniasPlayerListener extends PlayerListener {
 		Player player = event.getPlayer();
 		PolygoniaPlayer ezp = General.getPlayer(player.getName());
 		int playerHeight = event.getTo().getBlockY();
+		if(ezp==null)
+		{
+			General.addPlayer(event.getPlayer().getEntityId(), event.getPlayer().getName());
+			ezp = General.getPlayer(player.getName());
+		}
 		Point playerPoint = new Point(event.getTo().getBlockX(), event.getTo()
 				.getBlockZ());
 
@@ -149,17 +154,16 @@ public class PolygoniasPlayerListener extends PlayerListener {
 
 	public void onPlayerLogin(PlayerLoginEvent event) {
 		if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
-			return;
+			General.addPlayer(event.getPlayer().getEntityId(), event.getPlayer()
+					.getName());
 		}
-		General.addPlayer(event.getPlayer().getEntityId(), event.getPlayer()
-				.getName());
 	}
 
 	public void onPlayerQuit(PlayerEvent event) {
 		General.removePlayer(event.getPlayer().getEntityId());
 	}
-
-	public void onPlayerCommand(PlayerChatEvent event) {
+	
+	public void onPlayerCommandPreprocess(PlayerChatEvent event) {
 		if (!event.isCancelled()) {
 			String[] split = event.getMessage().split("\\s");
 			if (split[0].equalsIgnoreCase("/who"))

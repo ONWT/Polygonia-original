@@ -1,5 +1,6 @@
 package org.gotdns.noobs.Polygonias.CommandHandlers;
 
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.gotdns.noobs.Polygonias.General;
@@ -12,160 +13,113 @@ public class ZoneCommandHandler {
 		create,save,flag,floor,ceiling,addowner,
 		addmember,removeowner,removemember,createchild,
 		addchildren,removechildren,name,enter,exit,draw,
-		comfirm,edit,world,cancel,delete;
+		confirm,edit,world,cancel,delete;
 	}
 	public static void Process(String[] data, PlayerChatEvent event) {
 		event.setCancelled(true);
 		PolygoniaPlayer ezp = General
 				.getPlayer(event.getPlayer().getEntityId());
 		int playerID = ezp.getEntityID();
-		if(hasCommandPermission(event.getPlayer(),General.myZones.get(data[2].toLowerCase())))
+		if(data.length>1)
+		{
+		boolean admin=isAdmin(event.getPlayer());
 		switch (Commands.valueOf(data[1].toLowerCase())) {
 		case create:
-			Create(data, event, ezp, playerID);
+			if(admin)
+				Create(data, event, ezp, playerID);
 			break;
 		case save:
-			Save(data, event, ezp, playerID);
+				Save(data, event, ezp, playerID);
 			break;
 		case flag:
-			Flag(data, event, ezp, playerID);
+				Flag(data, event, ezp, playerID);
 			break;
 		case floor:
-			Floor(data, event, ezp, playerID);
+				Floor(data, event, ezp, playerID);
 			break;
 		case ceiling:
-			Ceiling(data, event, ezp, playerID);
+				Ceiling(data, event, ezp, playerID);
 			break;
 		case addowner:
-			addowner(data, event, ezp, playerID);
+				addowner(data, event, ezp, playerID);
 			break;
 		case addmember:
-			addmember(data, event, ezp, playerID);
+				addmember(data, event, ezp, playerID);
 			break;
 		case removeowner:
-			removeowner(data, event, ezp, playerID);
+				removeowner(data, event, ezp, playerID);
 			break;
 		case removemember:
-			removemember(data, event, ezp, playerID);
+				removemember(data, event, ezp, playerID);
 			break;
 		case createchild:
-			CreateChild(data, event, ezp, playerID);
+				CreateChild(data, event, ezp, playerID);
 			break;
 		case addchildren:
-			AddChildren(data, event, ezp, playerID);
+			if(admin)
+				AddChildren(data, event, ezp, playerID);
 			break;
 		case removechildren:
-			RemoveChildren(data, event, ezp, playerID);
+				RemoveChildren(data, event, ezp, playerID);
 			break;
 		case name:
-			Name(data, event, ezp, playerID);
+				Name(data, event, ezp, playerID);
 			break;
 		case enter:
-			EnterMessage(data, event, ezp, playerID);
+				EnterMessage(data, event, ezp, playerID);
 			break;
 		case exit:
-			LeaveMessage(data, event, ezp, playerID);
+				LeaveMessage(data, event, ezp, playerID);
 			break;
 		case draw:
-			Draw(data, event, ezp, playerID);
+			if(admin)
+				Draw(data, event, ezp, playerID);
 			break;
-		case comfirm:
-			Confirm(data, event, ezp, playerID);
+		case confirm:
+				Confirm(data, event, ezp, playerID);
 			break;
 		case edit:
-			Edit(data, event, ezp, playerID);
+			if(isOwner(event.getPlayer(), General.myZones.get(data[2])))
+				Edit(data, event, ezp, playerID);
 			break;
 		case world:
-			World(data, event, ezp, playerID);
+			if(admin)
+				World(data, event, ezp, playerID);
 			break;
 		case cancel:
-			Cancel(data, event, ezp, playerID);
+				Cancel(data, event, ezp, playerID);
 			break;
 		case delete:
-			Delete(data, event, ezp, playerID);
+				Delete(data, event, ezp, playerID);
 			break;
 		default:
 			Help(event, ezp, playerID);
 			break;
 		}
-
-		// TODO: Remove old code
-		/**
-		 * Old code to be removed
-		 * 
-		 * 
-		 * if (Polygonias.permissions.has(event.getPlayer(),
-		 * "polygonias.admin")||event.getPlayer().isOp()) { if (data.length > 1)
-		 * { if (data[1].equalsIgnoreCase("create")) Create(data, event, ezp,
-		 * playerID); else if (data[1].equalsIgnoreCase("save")) Save(data,
-		 * event, ezp, playerID); else if (data[1].equalsIgnoreCase("flag"))
-		 * Flag(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("floor")) Floor(data, event, ezp,
-		 * playerID); else if (data[1].equalsIgnoreCase("ceiling"))
-		 * Ceiling(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("addowner")) addowner(data, event, ezp,
-		 * playerID); else if (data[1].equalsIgnoreCase("addmember"))
-		 * addmember(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("removeowner")) removeowner(data, event,
-		 * ezp, playerID); else if (data[1].equalsIgnoreCase("removemember"))
-		 * removemember(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("createChild")) CreateChild(data, event,
-		 * ezp, playerID,true); else if
-		 * (data[1].equalsIgnoreCase("addchildren")) AddChildren(data, event,
-		 * ezp, playerID); else if (data[1].equalsIgnoreCase("removechildren"))
-		 * RemoveChildren(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("name")) Name(data, event, ezp, playerID);
-		 * else if (data[1].equalsIgnoreCase("enter")) EnterMessage(data, event,
-		 * ezp, playerID); else if (data[1].equalsIgnoreCase("exit"))
-		 * LeaveMessage(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("draw")) Draw(data, event, ezp, playerID);
-		 * else if (data[1].equalsIgnoreCase("confirm")) Confirm(data, event,
-		 * ezp, playerID); else if (data[1].equalsIgnoreCase("edit")) Edit(data,
-		 * event, ezp, playerID); else if (data[1].equalsIgnoreCase("world"))
-		 * World(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("cancel")) Cancel(data, event, ezp,
-		 * playerID); else if (data[1].equalsIgnoreCase("delete")) Delete(data,
-		 * event, ezp, playerID); else { Help(event, ezp, playerID); } } else
-		 * Help(event, ezp, playerID); }else if(ezp.getCurrentZone()!=null) {
-		 * if(ezp.getCurrentZone().isOwner(ezp)) if (data.length > 1) { if
-		 * (data[1].equalsIgnoreCase("save")) Save(data, event, ezp, playerID);
-		 * else if (data[1].equalsIgnoreCase("flag")) Flag(data, event, ezp,
-		 * playerID); else if (data[1].equalsIgnoreCase("floor")) Floor(data,
-		 * event, ezp, playerID); else if (data[1].equalsIgnoreCase("ceiling"))
-		 * Ceiling(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("addowner")) addowner(data, event, ezp,
-		 * playerID); else if (data[1].equalsIgnoreCase("addmember"))
-		 * addmember(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("removeowner")) removeowner(data, event,
-		 * ezp, playerID); else if (data[1].equalsIgnoreCase("removemember"))
-		 * removemember(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("createchild")) CreateChild(data, event,
-		 * ezp, playerID,false); else if
-		 * (data[1].equalsIgnoreCase("removechildren")) RemoveChildren(data,
-		 * event, ezp, playerID); else if (data[1].equalsIgnoreCase("name"))
-		 * Name(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("enter")) EnterMessage(data, event, ezp,
-		 * playerID); else if (data[1].equalsIgnoreCase("exit"))
-		 * LeaveMessage(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("draw")) Draw(data, event, ezp, playerID);
-		 * else if (data[1].equalsIgnoreCase("confirm")) Confirm(data, event,
-		 * ezp, playerID); else if (data[1].equalsIgnoreCase("edit")) Edit(data,
-		 * event, ezp, playerID); else if (data[1].equalsIgnoreCase("cancel"))
-		 * Cancel(data, event, ezp, playerID); else if
-		 * (data[1].equalsIgnoreCase("delete")) Delete(data, event, ezp,
-		 * playerID); else { Help(event, ezp, playerID); } } }
-		 */
+		}else
+		{Help(event, ezp, playerID);}
 	}
 
-	private static boolean hasCommandPermission(Player player,
+	private static boolean isOwner(Player player,
 			Polygonia polygonia) {
 		if(Polygonias.permissions.has(player,"epiczones.admin"))
 			return true;
-		else if(polygonia.isOwner(player))
+		else if(polygonia.isOwner(player)&&polygonia.hasParent())
 			return true;
-		else
-			return false;
+		else if(polygonia.hasParent())
+			if(polygonia.getParent().isOwner(player))
+				return true;
+		
+		return false;
 	}
+	private static boolean isAdmin(Player player)
+	{
+	if(Polygonias.permissions.has(player,"epiczones.admin"))
+		return true;
+	else
+		return false;
+	}
+
 
 	private static void Set(int playerID, String propertyName, Object value) {
 		if (propertyName.equals("editzone"))
@@ -290,9 +244,7 @@ public class ZoneCommandHandler {
 			if ((data.length > 2) && (data[2].length() > 0)) {
 				String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
 				if (General.myZones.get(tag) == null) {
-					Polygonia zone = new Polygonia();
-					zone.setTag(tag);
-					zone.setName(tag);
+					Polygonia zone = new Polygonia(tag);
 					Set(playerID, "editzone", zone);
 					Set(playerID, "mode",
 							PolygoniaPlayer.PloygoniaMode.ZoneDraw);
@@ -315,65 +267,30 @@ public class ZoneCommandHandler {
 
 	private static void CreateChild(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.None) {
-			if ((data.length > 2) && (data[2].length() > 0)) {
-				String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
-				String ptag = data[3].replaceAll("[^a-zA-Z0-9]", "");
-				if (General.myZones.get(tag) == null) {
-					if (!Polygonias.permissions.has((Player) ezp,"epiczones.admin")||!General.myZones.get(ptag).isOwner(ezp)) {
-						SendMessage(event,
-								"You do not have permission to create a child zone here");
-					} else {
-						Polygonia zone = new Polygonia();
-						Polygonia pzone = General.myZones.get(ptag);
-						zone.setTag(tag);
-						zone.setName(tag);
-						zone.setParent(pzone);
-						pzone.addChild(zone);
-						Set(playerID, "editzone", zone);
-						Set(playerID, "mode",
-								PolygoniaPlayer.PloygoniaMode.ZoneDrawChild);
-						Set(playerID, "world", event.getPlayer().getWorld()
-								.getName());
-						SendMessage(
-								event,
-								"Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
-					}
-				} else {
-					SendMessage(event, "A zone already exists with the tag ["
-							+ tag + "]");
-				}
-			} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
 
 				String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
 				String ptag = ezp.getEditZone().getTag();
 				if (General.myZones.get(tag) == null) {
-					if (!Polygonias.permissions.has((Player) ezp,"epiczones.admin")||!General.myZones.get(ptag).isOwner(ezp)) {
-						SendMessage(event,
-								"You do not have permission to create a child zone here");
-					} else {
-						Polygonia zone = new Polygonia();
-						zone.setTag(tag);
-						zone.setName(tag);
-						zone.setParent(General.myZones.get(ptag));
-						Set(playerID, "editzone", zone);
-						Set(playerID, "mode",
-								PolygoniaPlayer.PloygoniaMode.ZoneDrawChild);
-						Set(playerID, "world", event.getPlayer().getWorld()
-								.getName());
-						SendMessage(
-								event,
-								"Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
-					}
+					Polygonia zone = new Polygonia(tag);
+					//zone.setParent(General.myZones.get(ptag));
+					Set(playerID, "addchildtag", tag);
+					Set(playerID, "addchild", General.myZones.get(tag));
+					Set(playerID, "editzone", zone);
+					Set(playerID, "mode",
+							PolygoniaPlayer.PloygoniaMode.ZoneDrawChild);
+					Set(playerID, "world", event.getPlayer().getWorld()
+							.getName());
+					SendMessage(
+							event,
+							"Zone Created. Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
 				}
 			} else {
+				SendMessage(event, "You are currently not editing a zone");
 				Help(event, ezp, playerID);
 			}
-		} else {
-			Help(event, ezp, playerID);
-		}
 	}
-
+	
 	private static void Save(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
 		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDraw
@@ -398,7 +315,7 @@ public class ZoneCommandHandler {
 				General.myZones.put(ezp.getEditZone().getTag(),
 						ezp.getEditZone());
 			}
-			General.SaveZones();
+			//General.SaveZones();
 			Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.None);
 			SendMessage(event, "Zone Saved.");
 		} else {
@@ -475,7 +392,6 @@ public class ZoneCommandHandler {
 					Set(playerID, "addchildtag", tag);
 					Set(playerID, "addchild", General.myZones.get(tag));
 				}
-
 				SendMessage(event, "Zone Children Updated.");
 			}
 		} else {

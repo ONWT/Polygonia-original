@@ -66,10 +66,10 @@ public class General {
 			if (zone == null) {
 				return getDefaultPerm(flag);
 			}
-			if (zone.isOwner(General.getPlayer(player.getEntityId()))) {
+			if (zone.isOwner(player)) {
 				return true;
 			}
-			if (zone.isMember(General.getPlayer(player.getEntityId()))) {
+			if (zone.isMember(player)) {
 				// TODO:make a flag so that you can say if members can make
 				// subZones.
 				return true;

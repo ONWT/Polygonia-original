@@ -72,7 +72,20 @@ public class Polygonia {
 
 	public Polygonia(String zoneData) {
 		String[] split = zoneData.split("\\|");
-
+		if (split.length==1)
+		{
+			this.tag=zoneData;
+			this.name=zoneData;
+			this.enterText="You are now entering "+ this.name;
+			this.exitText="You are now exiting "+ this.name;
+			if (General.myZones.get(this.getTag()) == null) {
+				General.myZones.put(this.getTag(),this);
+				General.myZoneTags.add(this.getTag());
+			} else {
+				General.myZones.remove(this.getTag());
+				General.myZones.put(this.getTag(),this);
+			}
+		}
 		if (split.length == 10) {
 			this.tag = split[0].replaceAll("[^a-zA-Z0-9]", "");
 			this.world = split[1];
@@ -187,6 +200,9 @@ public class Polygonia {
 	}
 
 	public boolean isMember(PolygoniaPlayer p) {
+		return this.member.contains(p.getName());
+	}
+	public boolean isMember(Player p) {
 		return this.member.contains(p.getName());
 	}
 
