@@ -3,7 +3,7 @@ package org.gotdns.noobs.Polygonias;
 import java.util.HashMap;
 import java.util.Map;
 
-/*public class PolygoniaPermission {
+public class PolygoniaPermission {
 	private String permissionObject = "";
 	private Map<String, String> permissionFlags = new HashMap<String, String>();
 
@@ -32,4 +32,4 @@ import java.util.Map;
 		}
 		return result;
 	}
-}*/
+}
