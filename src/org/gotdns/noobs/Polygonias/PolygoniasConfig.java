@@ -19,6 +19,20 @@ public class PolygoniasConfig extends Configuration {
 	public boolean defaultDestroy;
 	public boolean enableRadius;
 	public int zoneTool = 280;
+	
+	public static String Plugin_Directory;
+	// Database Type
+	public static String Database_Type = "MySQL";
+
+	// Relational SQL Generics
+	public static String SQL_Hostname = "localhost";
+	public static String SQL_Port = "3306";
+	public static String SQL_Username = "root";
+	public static String SQL_Password = "";
+
+	// SQL Generics
+	public static String SQL_Database = "minecraft";
+	public static String SQL_Table = "iConomy";
 
 	static {
 		DumperOptions options = new DumperOptions();
@@ -59,6 +73,18 @@ public class PolygoniasConfig extends Configuration {
 			}
 		} else {
 			super.load();
+			// Database Configuration
+			Database_Type = getString("System.Database.Type", Database_Type);
+
+			// MySQL
+			SQL_Hostname = getString("System.Database.MySQL.Hostname", SQL_Hostname);
+			SQL_Port = getString("System.Database.MySQL.Port", SQL_Port);
+			SQL_Username = getString("System.Database.MySQL.Username", SQL_Username);
+			SQL_Password = getString("System.Database.MySQL.Password", SQL_Password);
+
+			// SQLite
+			SQL_Database = getString("System.Database.Name", SQL_Database);
+			SQL_Table = getString("System.Database.Table", SQL_Table);
 
 			this.mapRadius = getInt("mapRadius", this.mapRadius);
 			this.defaultEnter = getBoolean("defaultEnter", true);

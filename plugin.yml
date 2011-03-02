@@ -1,3 +1,11 @@
 name: Polygonia
 main: org.gotdns.noobs.Polygonias.Polygonias
 version: 0.2
+description: >
+             A pluggin to make protection areas in freform shapes.
+commands:
+  zone:
+    description: This is the command to do everythin
+    usage: |
+           /<command> <subcommand> [Arg]
+           Example: /<command> create zone - creates a zone and puts you in to draw mode

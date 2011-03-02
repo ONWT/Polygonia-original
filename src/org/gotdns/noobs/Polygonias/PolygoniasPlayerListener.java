@@ -10,7 +10,6 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerItemEvent;
 import org.bukkit.event.player.PlayerListener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.gotdns.noobs.Polygonias.CommandHandlers.ReloadCommandHandler;
 import org.gotdns.noobs.Polygonias.CommandHandlers.WhoCommandHandler;
@@ -152,11 +151,11 @@ public class PolygoniasPlayerListener extends PlayerListener {
 		return result;
 	}
 
-	public void onPlayerLogin(PlayerLoginEvent event) {
-		if (event.getResult() != PlayerLoginEvent.Result.ALLOWED) {
+	@Override
+	public void onPlayerJoin(PlayerEvent event) {
 			General.addPlayer(event.getPlayer().getEntityId(), event.getPlayer()
 					.getName());
-		}
+			super.onPlayerJoin(event);
 	}
 
 	public void onPlayerQuit(PlayerEvent event) {

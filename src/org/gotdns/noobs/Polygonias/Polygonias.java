@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.HashMap;
 
 import org.anjocaido.groupmanager.GroupManager;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
@@ -39,6 +41,7 @@ public class Polygonias extends JavaPlugin {
 			setupPermissions();
 			checkConfigDir();
 			General.config.load();
+			PolygoniasConfig.Plugin_Directory=this.getDataFolder().getPath();
 			General.config.save();
 			General.loadZones(getDataFolder());
 
@@ -46,7 +49,7 @@ public class Polygonias extends JavaPlugin {
 					Event.Priority.Normal, this);
 			pm.registerEvent(Event.Type.PLAYER_TELEPORT, this.playerListener,
 					Event.Priority.Normal, this);
-			pm.registerEvent(Event.Type.PLAYER_LOGIN, this.playerListener,
+			pm.registerEvent(Event.Type.PLAYER_JOIN, this.playerListener,
 					Event.Priority.Monitor, this);
 			pm.registerEvent(Event.Type.PLAYER_QUIT, this.playerListener,
 					Event.Priority.Monitor, this);
@@ -89,6 +92,11 @@ public class Polygonias extends JavaPlugin {
 				+ pdfFile.getVersion() + " is disabled.");
 	}
 
+	@Override
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+		
+		return false;
+	}
 	public boolean isDebugging(Player player) {
 		if (this.debugees.containsKey(player)) {
 			return ((Boolean) this.debugees.get(player)).booleanValue();
