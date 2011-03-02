@@ -102,6 +102,13 @@ public class PolygoniasConfig extends Configuration {
 		this.root.put("defaultDestroy", Boolean.valueOf(this.defaultDestroy));
 		this.root.put("enableRadius", Boolean.valueOf(this.enableRadius));
 		this.root.put("zoneTool", Integer.valueOf(this.zoneTool));
+		this.root.put("System.Database.MySQL.Hostname", String.valueOf(SQL_Hostname));
+		this.root.put("System.Database.MySQL.Port", String.valueOf(SQL_Port));
+		this.root.put("System.Database.MySQL.Username", String.valueOf(SQL_Username));
+		this.root.put("System.Database.MySQL.Password", String.valueOf(SQL_Password));
+		this.root.put("System.Database.Type", String.valueOf(Database_Type));
+		this.root.put("System.Database.Name", String.valueOf(SQL_Database));
+		this.root.put("System.Database.Table", String.valueOf(SQL_Table));
 		try {
 			FileOutputStream stream = new FileOutputStream(this.file);
 			stream.getChannel().truncate(0L);
