@@ -43,7 +43,7 @@ public class Polygonias extends JavaPlugin {
 			General.config.load();
 			PolygoniasConfig.Plugin_Directory=this.getDataFolder().getPath();
 			General.config.save();
-			General.loadZones(getDataFolder());
+			Polygonia.getInstance().loadZones(getDataFolder());
 
 			pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener,
 					Event.Priority.Normal, this);
@@ -87,7 +87,7 @@ public class Polygonias extends JavaPlugin {
 
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = getDescription();
-		General.SaveZones();
+		Polygonia.getInstance().SaveZones();
 		System.out.println(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is disabled.");
 	}

@@ -52,7 +52,7 @@ public class PolygoniasVehicleListener extends VehicleListener {
 		Polygonia foundZone = null;
 		String worldName = player.getWorld().getName();
 
-		if (General.pointWithinBorder(playerPoint, player)) {
+		if (Polygonia.pointWithinBorder(playerPoint, player)) {
 			foundZone = FindZone(player, ezp, playerHeight, playerPoint,
 					worldName);
 
@@ -93,18 +93,18 @@ public class PolygoniasVehicleListener extends VehicleListener {
 
 		if (ezp.getCurrentZone() != null) {
 			result = ezp.getCurrentZone();
-			String resultTag = General.isPointInZone(result, playerHeight,
+			String resultTag = Polygonia.isPointInZone(result, playerHeight,
 					playerPoint, worldName);
 			if (resultTag.length() > 0) {
 				if (!resultTag.equalsIgnoreCase(ezp.getCurrentZone().getTag())) {
-					result = (Polygonia) General.myZones.get(resultTag);
+					result = Polygonia.getInstance().getZone(resultTag);
 				}
 			} else {
 				result = null;
 			}
 
 		} else {
-			result = General.getZoneForPoint(player, ezp, playerHeight,
+			result = Polygonia.getZoneForPoint(player, ezp, playerHeight,
 					playerPoint, worldName);
 		}
 

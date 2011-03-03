@@ -3,12 +3,18 @@ package org.gotdns.noobs.Polygonias;
 import java.awt.Point;
 import java.awt.Polygon;
 import java.awt.Rectangle;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
@@ -17,9 +23,13 @@ import org.bukkit.entity.Player;
  * @author noobs
  * 
  */
-public class Polygonia {
+
+public final class Polygonia {
 	// TODO: Make singleton out off this class
 	// TODO:Player specific flags
+	private static Polygonia instance=null;
+	private static final String ZONE_FILE = "zones.txt";
+	private static File ZoneFile;
 	private String tag = "";
 	private String name = "";
 
@@ -31,8 +41,8 @@ public class Polygonia {
 	private String enterText = "";
 	private String exitText = "";
 	private Polygonia parent = null;
+	private static Map<String,Polygonia> Zones = new HashMap<String,Polygonia>();
 	private Map<String, Polygonia> children = new HashMap<String, Polygonia>();
-	private Set<String> childrenNames = new HashSet<String>();
 	private Set<String> owner = new HashSet<String>();
 	private Set<String> member = new HashSet<String>();
 	private LinkedList<Point> pointlist = new LinkedList<Point>();
@@ -44,110 +54,293 @@ public class Polygonia {
 	private int regenDelay = 0;
 	private int regenInterval = 500;
 
-	public Polygonia() {
+	protected Polygonia() {
 	}
 
-	// TODO: Remove ugliness
-	public Polygonia(Polygonia prime) {
-		this.tag = prime.tag;
-		this.name = prime.name;
-		this.floor = prime.floor;
-		this.ceiling = prime.ceiling;
-		this.world = prime.world;
-		this.polygon = prime.polygon;
-		this.boundingBox = prime.boundingBox;
-		this.enterText = prime.enterText;
-		this.exitText = prime.exitText;
-		this.parent = prime.parent;
-		this.children = prime.children;
-		this.childrenNames = prime.childrenNames;
-		this.hasParentFlag = prime.hasParentFlag;
-		this.hasPVP = prime.hasPVP;
-		this.hasRegen = prime.hasRegen;
-		this.lastRegen = prime.lastRegen;
-		this.regenAmount = prime.regenAmount;
-		this.regenDelay = prime.regenDelay;
-		this.regenInterval = prime.regenInterval;
+	public static Polygonia getInstance() {
+	      if(instance == null) {
+	         instance = new Polygonia();
+	      }
+	      return instance;
+	   }
+	private void AddToList(Polygonia newP) {
+		if (Zones.get(this.getTag()) == null) {
+			Zones.put(this.getTag(),newP);
+		} else {
+			Zones.remove(this.getTag());
+			Zones.put(this.getTag(),newP);
+		}
 	}
 
-	public Polygonia(String zoneData) {
+	public void delZone(String Tag) throws Exception
+	{
+		Zones.remove(Tag);
+	}
+	
+	public Polygonia addZone(String zoneData) throws Exception
+	{
+		Polygonia newP;
+		if (zoneData==null)
+		{
+			newP = new Polygonia();
+			AddToList(newP);
+			return newP;
+		}
 		String[] split = zoneData.split("\\|");
 		if (split.length==1)
 		{
-			this.tag=zoneData;
-			this.name=zoneData;
-			this.enterText="You are now entering "+ this.name;
-			this.exitText="You are now exiting "+ this.name;
-			if (General.myZones.get(this.getTag()) == null) {
-				General.myZones.put(this.getTag(),this);
-				General.myZoneTags.add(this.getTag());
-			} else {
-				General.myZones.remove(this.getTag());
-				General.myZones.put(this.getTag(),this);
+			String tag=zoneData;
+			if (Zones.containsKey(tag))
+			{
+				newP=Zones.get(tag);
+			}else
+			{
+				newP = new Polygonia();
+				AddToList(newP);
 			}
+			newP.tag=zoneData;
+			newP.name=zoneData;
+			newP.enterText="You are now entering "+ this.name;
+			newP.exitText="You are now exiting "+ this.name;
+			return newP;
 		}
 		if (split.length == 10) {
-			this.tag = split[0].replaceAll("[^a-zA-Z0-9]", "");
-			this.world = split[1];
-			this.name = split[2];
-			this.enterText = split[4];
-			this.exitText = split[5];
-			this.floor = Integer.valueOf(split[6]).intValue();
-			this.ceiling = Integer.valueOf(split[7]).intValue();
-			this.parent = null;
-			this.children = null;
+			String tag=split[0].replaceAll("[^a-zA-Z0-9]", "");
+			if (Zones.containsKey(tag))
+			{
+				newP=Zones.get(tag);
+			}else
+			{
+				newP = new Polygonia();
+				AddToList(newP);
+			}
+			newP.tag = split[0].replaceAll("[^a-zA-Z0-9]", "");
+			newP.world = split[1];
+			newP.name = split[2];
+			newP.enterText = split[4];
+			newP.exitText = split[5];
+			newP.floor = Integer.valueOf(split[6]).intValue();
+			newP.ceiling = Integer.valueOf(split[7]).intValue();
+			newP.parent = null;
+			newP.children = null;
 
-			buildFlags(split[3]);
-			buildChildren(split[8]);
-			buildPolygon(split[9]);
+			buildFlags(split[3],newP);
+			buildChildren(split[8],newP);
+			buildPolygon(split[9],newP);
 
-			this.boundingBox = this.polygon.getBounds();
-
+			newP.boundingBox = this.polygon.getBounds();
+			reconcileChildren();
 			System.out.println("Created Zone [" + this.name + "]");
+			return newP;
 		}
 		if (split.length > 10) {
-			this.tag = split[0].replaceAll("[^a-zA-Z0-9]", "");
-			this.world = split[1];
-			this.name = split[2];
-			this.enterText = split[4];
-			this.exitText = split[5];
-			this.floor = Integer.valueOf(split[6]).intValue();
-			this.ceiling = Integer.valueOf(split[7]).intValue();
-			this.parent = null;
-			this.children = null;
+			String tag=split[0].replaceAll("[^a-zA-Z0-9]", "");
+			if (Zones.containsKey(tag))
+			{
+				newP=Zones.get(tag);
+			}else
+			{
+				newP = new Polygonia();
+				AddToList(newP);
+			}
+			newP.tag = split[0].replaceAll("[^a-zA-Z0-9]", "");
+			newP.world = split[1];
+			newP.name = split[2];
+			newP.enterText = split[4];
+			newP.exitText = split[5];
+			newP.floor = Integer.valueOf(split[6]).intValue();
+			newP.ceiling = Integer.valueOf(split[7]).intValue();
+			newP.parent = null;
+			newP.children = null;
 
-			buildFlags(split[3]);
-			buildChildren(split[8]);
-			buildPolygon(split[9]);
-			buildOwners(split[10]);
-			buildMembers(split[11]);
+			buildFlags(split[3],newP);
+			buildChildren(split[8],newP);
+			buildPolygon(split[9],newP);
+			buildOwners(split[10],newP);
+			buildMembers(split[11],newP);
 
 			this.boundingBox = this.polygon.getBounds();
-
+			reconcileChildren();
 			System.out.println("Created Zone [" + this.name + "]");
+			return newP;
 		}
+	throw new Exception("Not a valid zone data string");
 	}
-
-	private void buildMembers(String data) {
+	private void buildMembers(String data, Polygonia newP) {
 		if (data.length() > 0) {
 			String[] dataList = data.split("\\s");
 
 			for (int i = 0; i < dataList.length; i++) {
-				this.member.add(dataList[1]);
+				newP.member.add(dataList[1]);
 			}
 		}
 	}
-
-	private void buildOwners(String data) {
+	
+	/**
+	 * @param data String data of owners separated by space
+	 * @param newP Polygon to build Owners for
+	 */
+	private void buildOwners(String data, Polygonia newP) {
 		if (data.length() > 0) {
 			String[] dataList = data.split("\\s");
 
 			for (int i = 0; i < dataList.length; i++) {
-				this.owner.add(dataList[1]);
+				newP.owner.add(dataList[1]);
 			}
 		}
 	}
 
+	/**
+	 * @param data String data of Flags separated by space
+	 * @param newP Polygon to build Flags for
+	 */
+	private void buildFlags(String data, Polygonia newP) {
+		if (data.length() > 0) {
+			String[] dataList = data.split("\\s");
+
+			for (int i = 0; i < dataList.length; i++) {
+				String[] split = dataList[i].split(":");
+				String flag = split[0].toLowerCase();
+
+				if (flag.equals("pvp")) {
+					newP.hasPVP = split[1].equalsIgnoreCase("true");
+				} else if (flag.equals("regen")) {
+					if (split.length > 2) {
+						if (split.length > 3) {
+							setRegen(split[1] + " " + split[2] + " " + split[3],newP);
+						} else {
+							setRegen(split[1] + " " + split[2] + " 0",newP);
+						}
+					} else {
+						setRegen(split[1] + " 1",newP);
+					}
+				} else
+					flag.equals("mobs");
+			}
+		}
+	}
+
+	protected void setRegen(String value, Polygonia newP) {
+		String[] split = value.split("\\s");
+		int interval = 0;
+		int amount = 0;
+		int delay = 0;
+
+		if (split.length > 1) {
+			interval = Integer.valueOf(split[0]).intValue();
+			amount = Integer.valueOf(split[1]).intValue();
+			if (split.length > 2) {
+				delay = Integer.valueOf(split[2]).intValue();
+			}
+		}
+
+		if (amount != 0) {
+			newP.hasRegen = true;
+			newP.regenInterval = interval;
+			newP.regenAmount = amount;
+			newP.regenDelay = delay;
+		} else {
+			newP.hasRegen = false;
+			newP.regenInterval = 0;
+			newP.regenDelay = 0;
+			newP.regenAmount = 0;
+		}
+	}
+	/**
+	 * Loads zones from file zones.txt at path
+	 * @param path 
+	 */
+	public static void loadZones(File path) throws IOException {
+		if (path != null) {
+			File file = new File(path + File.separator + ZONE_FILE);
+			ZoneFile = file;
+		}else{
+			throw new IOException("path not defined");
+		}
+
+		try {
+			Scanner scanner = new Scanner(ZoneFile);
+			Zones.clear();
+			Zones.clear();
+			try {
+				while (scanner.hasNext()) {
+					String line = scanner.nextLine().trim();
+					if ((!line.startsWith("#")) && (!line.isEmpty())) {
+						instance.addZone(line);
+					}
+				}
+			} finally {
+				scanner.close();
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+
+		reconcileChildren();
+	}
+	
+	private static void reconcileChildren() {
+		for (Polygonia zone : Zones.values()) {
+			if (zone.hasChildren()) {
+				for (Polygonia childZone : zone.children.values()) {
+					childZone.setParent(zone);
+					zone.addChild(childZone);
+
+					Zones.remove(childZone.getTag());
+					Zones.put(childZone.getTag(), childZone);
+				}
+			}
+			Zones.remove(zone.getTag());
+			Zones.put(zone.getTag(), zone);
+		}
+	}
+	
+	public void setRegen(String value) {
+		String[] split = value.split("\\s");
+		int interval = 0;
+		int amount = 0;
+		int delay = 0;
+
+		if (split.length > 1) {
+			interval = Integer.valueOf(split[0]).intValue();
+			amount = Integer.valueOf(split[1]).intValue();
+			if (split.length > 2) {
+				delay = Integer.valueOf(split[2]).intValue();
+			}
+		}
+
+		if (amount != 0) {
+			this.hasRegen = true;
+			this.regenInterval = interval;
+			this.regenAmount = amount;
+			this.regenDelay = delay;
+		} else {
+			this.hasRegen = false;
+			this.regenInterval = 0;
+			this.regenDelay = 0;
+			this.regenAmount = 0;
+		}
+	}
+
+	private void buildChildren(String data,Polygonia newP) {
+		if (data.length() > 0) {
+			String[] dataList = data.split("\\s");
+
+			for (int i = 0; i < dataList.length; i++) {
+				try {
+					newP.children.put(dataList[i],addZone(dataList[i]));
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public Polygonia getZone(String tag)
+	{
+		return Zones.get(tag);
+	}
 	public String getTag() {
 		return this.tag;
 	}
@@ -186,10 +379,6 @@ public class Polygonia {
 
 	public Map<String, Polygonia> getChildren() {
 		return this.children;
-	}
-
-	public Set<String> getChildrenTags() {
-		return this.childrenNames;
 	}
 
 	public boolean isOwner(PolygoniaPlayer p) {
@@ -305,79 +494,12 @@ public class Polygonia {
 		this.hasParentFlag = true;
 	}
 
-	private void buildFlags(String data) {
-		if (data.length() > 0) {
-			String[] dataList = data.split("\\s");
-
-			for (int i = 0; i < dataList.length; i++) {
-				String[] split = dataList[i].split(":");
-				String flag = split[0].toLowerCase();
-
-				if (flag.equals("pvp")) {
-					this.hasPVP = split[1].equalsIgnoreCase("true");
-				} else if (flag.equals("regen")) {
-					if (split.length > 2) {
-						if (split.length > 3) {
-							setRegen(split[1] + " " + split[2] + " " + split[3]);
-						} else {
-							setRegen(split[1] + " " + split[2] + " 0");
-						}
-					} else {
-						setRegen(split[1] + " 1");
-					}
-				} else
-					flag.equals("mobs");
-			}
-		}
-	}
-
-	public void setPVP(boolean value) {
-		this.hasPVP = value;
-	}
-
-	public void setRegen(String value) {
-		String[] split = value.split("\\s");
-		int interval = 0;
-		int amount = 0;
-		int delay = 0;
-
-		if (split.length > 1) {
-			interval = Integer.valueOf(split[0]).intValue();
-			amount = Integer.valueOf(split[1]).intValue();
-			if (split.length > 2) {
-				delay = Integer.valueOf(split[2]).intValue();
-			}
-		}
-
-		if (amount != 0) {
-			this.hasRegen = true;
-			this.regenInterval = interval;
-			this.regenAmount = amount;
-			this.regenDelay = delay;
-		} else {
-			this.hasRegen = false;
-			this.regenInterval = 0;
-			this.regenDelay = 0;
-			this.regenAmount = 0;
-		}
-	}
-
-	private void buildChildren(String data) {
-		if (data.length() > 0) {
-			String[] dataList = data.split("\\s");
-
-			for (int i = 0; i < dataList.length; i++) {
-				this.childrenNames.add(dataList[i]);
-			}
-		}
-	}
-
-	private void buildPolygon(String data) {
+	private void buildPolygon(String data,Polygonia newP) {
 		String[] dataList = data.split("\\s");
-		this.polygon = new Polygon();
+		newP.polygon = new Polygon();
 		for (int i = 0; i < dataList.length; i++) {
 			String[] split = dataList[i].split(":");
-			this.polygon.addPoint(Integer.valueOf(split[0]).intValue(), Integer
+			newP.polygon.addPoint(Integer.valueOf(split[0]).intValue(), Integer
 					.valueOf(split[1]).intValue());
 		}
 	}
@@ -446,5 +568,183 @@ public class Polygonia {
 	 */
 	public LinkedList<Point> getPointlist() {
 		return pointlist;
+	}
+	
+	public static void SaveZones() {
+		try {
+			String data = BuildZoneData();
+			System.out.println("Data to save: " + data);
+			Writer output = new BufferedWriter(new FileWriter(ZoneFile, false));
+			try {
+				output.write(data);
+			} finally {
+				output.close();
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	private static String BuildZoneData() {
+		String result = "#Zone Tag|World|Zone Name|Flags|Enter Message|Exit Message|Floor|Ceiling|Child Zones|PointList\n";
+		String line = "";
+
+		for (Polygonia z : Zones.values()) {
+			line = z.getTag() + "|";
+			line = line + z.getWorld() + "|";
+			line = line + z.getName() + "|";
+			line = line + BuildFlags(z) + "|";
+			line = line + z.getEnterText() + "|";
+			line = line + z.getExitText() + "|";
+			line = line + z.getFloor() + "|";
+			line = line + z.getCeiling() + "|";
+			line = line + BuildChildren(z) + "|";
+			line = line + BuildPointList(z) + "|";
+			line = line + BuildOwners(z) + "|";
+			line = line + BuildMembers(z) + "\n";
+			result = result + line;
+		}
+
+		return result;
+	}
+
+	private static String BuildMembers(Polygonia z) {
+		String result = "";
+		for (String p : z.getMembers()) {
+			result = result + " " + p;
+		}
+		return result;
+	}
+
+	private static String BuildOwners(Polygonia z) {
+		String result = "";
+		for (String p : z.getOwners()) {
+			result = result + " " + p;
+		}
+		return result;
+	}
+
+	private static String BuildFlags(Polygonia z) {
+		String result = "";
+
+		if (z.hasPVP())
+			result = result + "pvp:true ";
+		else {
+			result = result + "pvp:false ";
+		}
+
+		if (z.hasRegen()) {
+			if (z.getRegenDelay() > 0) {
+				result = result + "regen:" + z.getRegenInterval() + ":"
+						+ z.getRegenAmount() + ":" + z.getRegenDelay() + " ";
+			} else {
+				result = result + "regen:" + z.getRegenInterval() + ":"
+						+ z.getRegenAmount() + " ";
+			}
+
+		}
+
+		return result;
+	}
+
+	private static String BuildChildren(Polygonia z) {
+		String result = "";
+
+		for (Polygonia zone : z.getChildren().values()) {
+			result = result + zone.getTag() + " ";
+		}
+
+		return result;
+	}
+
+	private static String BuildPointList(Polygonia z) {
+		String result = "";
+		Polygon poly = z.getPolygon();
+
+		for (int i = 0; i < poly.npoints; i++) {
+			result = result + poly.xpoints[i] + ":" + poly.ypoints[i] + " ";
+		}
+
+		return result;
+	}
+
+	public static Polygonia getZoneForPoint(Player player, PolygoniaPlayer ezp,
+			int playerHeight, Point playerPoint, String worldName) {
+		Polygonia result = null;
+		String resultTag = "";
+
+		for (Polygonia zone: Zones.values()) {
+			resultTag = isPointInZone(zone, playerHeight, playerPoint,worldName);
+			if (resultTag.length() <= 0)
+				continue;
+			result = Zones.get(resultTag);
+			break;
+		}
+
+		return result;
+	}
+
+	public static String isPointInZone(Polygonia zone, int playerHeight,
+			Point playerPoint, String worldName) {
+		String result = "";
+
+		if (zone.hasChildren()) {
+			for (Polygonia ChildZone : zone.getChildren().values()) {
+				result = isPointInZone(
+						(Polygonia) zone.getChildren().get(ChildZone.getTag()),
+						playerHeight, playerPoint, worldName);
+				if (result.length() > 0) {
+					return result;
+				}
+			}
+		}
+
+		if (worldName.equalsIgnoreCase(zone.getWorld())) {
+			if ((playerHeight >= zone.getFloor())
+					&& (playerHeight <= zone.getCeiling())) {
+				if (zone.pointWithin(playerPoint)) {
+					result = zone.getTag();
+				}
+			}
+		}
+
+		return result;
+	}
+
+	public static boolean pointWithinBorder(Point point, Player player) {
+		if (General.config.enableRadius) {
+			PolygoniaPlayer ezp = General.getPlayer(player.getName());
+			double xsquared = point.x * point.x;
+			double ysquared = point.y * point.y;
+			double distanceFromCenter = Math.sqrt(xsquared + ysquared);
+
+			ezp.setDistanceFromCenter((int) distanceFromCenter);
+
+			if (distanceFromCenter <= General.config.mapRadius) {
+				if (ezp.getPastBorder()) {
+					General.WarnPlayer(player, ezp,
+							"You are inside the map radius border.");
+					ezp.setPastBorder(false);
+				}
+				return true;
+			}
+
+			if (Polygonias.permissions.has(player, "epiczones.ignoremapradius")) {
+				if (!ezp.getPastBorder()) {
+					General.WarnPlayer(player, ezp,
+							"You are outside the map radius border.");
+					ezp.setPastBorder(true);
+				}
+				return true;
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public void setPVP(boolean booleanValue) {
+		this.hasPVP=booleanValue;
 	}
 }

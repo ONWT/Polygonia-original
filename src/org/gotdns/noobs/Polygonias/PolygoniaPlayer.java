@@ -13,7 +13,7 @@ public class PolygoniaPlayer {
 	private int distanceFromCenter;
 	private boolean teleporting = false;
 	private Date lastCheck = new Date();
-	private PloygoniaMode mode = PloygoniaMode.None;
+	private PolygoniaMode mode = PolygoniaMode.None;
 	private Polygonia editZone = null;
 	private boolean pastBorder = false;
 	private Date enteredZone = new Date();
@@ -50,7 +50,7 @@ public class PolygoniaPlayer {
 		return this.teleporting;
 	}
 
-	public PloygoniaMode getMode() {
+	public PolygoniaMode getMode() {
 		return this.mode;
 	}
 
@@ -74,7 +74,7 @@ public class PolygoniaPlayer {
 		this.entityID = value;
 	}
 
-	public void setMode(PloygoniaMode value) {
+	public void setMode(PolygoniaMode value) {
 		this.mode = value;
 	}
 
@@ -116,7 +116,7 @@ public class PolygoniaPlayer {
 		this.teleporting = value;
 	}
 
-	public static enum PloygoniaMode {
+	public static enum PolygoniaMode {
 		None, ZoneDraw, ZoneEdit, ZoneDrawConfirm, ZoneDeleteConfirm, ZoneDrawChild;
 	}
 }

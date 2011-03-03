@@ -38,7 +38,7 @@ public class PolygoniasRegen implements Runnable {
 		}
 
 		for (int i = 0; i < regenZoneTags.size(); i++) {
-			((Polygonia) General.myZones.get(regenZoneTags.get(i))).Regen();
+			((Polygonia) Polygonia.getInstance().getZone(regenZoneTags.get(i))).Regen();
 		}
 	}
 }

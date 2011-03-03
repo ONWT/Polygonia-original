@@ -1,5 +1,7 @@
 package org.gotdns.noobs.Polygonias.CommandHandlers;
 
+import java.io.IOException;
+
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
@@ -79,7 +81,7 @@ public class ZoneCommandHandler {
 				Confirm(data, event, ezp, playerID);
 			break;
 		case edit:
-			if(isOwner(event.getPlayer(), General.myZones.get(data[2])))
+			if(isOwner(event.getPlayer(), Polygonia.getInstance().getZone(data[2])))
 				Edit(data, event, ezp, playerID);
 			break;
 		case world:
@@ -126,7 +128,7 @@ public class ZoneCommandHandler {
 			General.getPlayer(playerID).setEditZone((Polygonia) value);
 		else if (propertyName.equals("mode"))
 			General.getPlayer(playerID).setMode(
-					(PolygoniaPlayer.PloygoniaMode) value);
+					(PolygoniaPlayer.PolygoniaMode) value);
 		else if (propertyName.equals("flag:pvp"))
 			General.getPlayer(playerID).getEditZone()
 					.setPVP(Boolean.valueOf((String) value).booleanValue());
@@ -149,9 +151,6 @@ public class ZoneCommandHandler {
 		else if (propertyName.equals("addchild"))
 			General.getPlayer(playerID).getEditZone()
 					.addChild((Polygonia) value);
-		else if (propertyName.equals("addchildtag"))
-			General.getPlayer(playerID).getEditZone().getChildrenTags()
-					.add((String) value);
 		else if (propertyName.equals("removechild"))
 			General.getPlayer(playerID).getEditZone()
 					.removeChild((String) value);
@@ -177,7 +176,7 @@ public class ZoneCommandHandler {
 
 	private static void addmember(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				for (int i = 2; i < data.length; i++) {
 					Set(playerID, "addmember", data[i]);
@@ -192,7 +191,7 @@ public class ZoneCommandHandler {
 
 	private static void addowner(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 1) {
 				for (int i = 2; i < data.length; i++) {
 					Set(playerID, "addowner", data[i]);
@@ -206,7 +205,7 @@ public class ZoneCommandHandler {
 
 	private static void removemember(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				for (int i = 2; i < data.length; i++) {
 					Set(playerID, "removemember", data[i]);
@@ -222,7 +221,7 @@ public class ZoneCommandHandler {
 
 	private static void removeowner(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 1) {
 				for (int i = 2; i < data.length; i++) {
 					Set(playerID, "removeowner", data[i]);
@@ -240,14 +239,20 @@ public class ZoneCommandHandler {
 
 	private static void Create(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.None) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.None) {
 			if ((data.length > 2) && (data[2].length() > 0)) {
 				String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
-				if (General.myZones.get(tag) == null) {
-					Polygonia zone = new Polygonia(tag);
+				if (Polygonia.getInstance().getZone(tag) == null) {
+					Polygonia zone=null;
+					try {
+						zone = Polygonia.getInstance().addZone(tag);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					Set(playerID, "editzone", zone);
 					Set(playerID, "mode",
-							PolygoniaPlayer.PloygoniaMode.ZoneDraw);
+							PolygoniaPlayer.PolygoniaMode.ZoneDraw);
 					Set(playerID, "world", event.getPlayer().getWorld()
 							.getName());
 					SendMessage(
@@ -267,18 +272,24 @@ public class ZoneCommandHandler {
 
 	private static void CreateChild(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 
 				String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
 				String ptag = ezp.getEditZone().getTag();
-				if (General.myZones.get(tag) == null) {
-					Polygonia zone = new Polygonia(tag);
-					//zone.setParent(General.myZones.get(ptag));
+				if (Polygonia.getInstance().getZone(tag) == null) {
+					Polygonia zone=null;
+					try {
+						zone = Polygonia.getInstance().addZone(tag);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					//zone.setParent(Polygonia.getInstance().getZone(ptag));
 					Set(playerID, "addchildtag", tag);
-					Set(playerID, "addchild", General.myZones.get(tag));
+					Set(playerID, "addchild", Polygonia.getInstance().getZone(tag));
 					Set(playerID, "editzone", zone);
 					Set(playerID, "mode",
-							PolygoniaPlayer.PloygoniaMode.ZoneDrawChild);
+							PolygoniaPlayer.PolygoniaMode.ZoneDrawChild);
 					Set(playerID, "world", event.getPlayer().getWorld()
 							.getName());
 					SendMessage(
@@ -293,10 +304,10 @@ public class ZoneCommandHandler {
 	
 	private static void Save(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDraw
-				|| ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDrawChild) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDraw
+				|| ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDrawChild) {
 			if (ezp.getEditZone().getPolygon().npoints > 2) {
-				Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.ZoneEdit);
+				Set(playerID, "mode", PolygoniaPlayer.PolygoniaMode.ZoneEdit);
 				Set(playerID, "boundingbox", "");
 				SendMessage(
 						event,
@@ -305,18 +316,9 @@ public class ZoneCommandHandler {
 				SendMessage(event,
 						"You must draw at least 3 points before you can move on.");
 			}
-		} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
-			if (General.myZones.get(ezp.getEditZone().getTag()) == null) {
-				General.myZones.put(ezp.getEditZone().getTag(),
-						ezp.getEditZone());
-				General.myZoneTags.add(ezp.getEditZone().getTag());
-			} else {
-				General.myZones.remove(ezp.getEditZone().getTag());
-				General.myZones.put(ezp.getEditZone().getTag(),
-						ezp.getEditZone());
-			}
+		} else if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			//General.SaveZones();
-			Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.None);
+			Set(playerID, "mode", PolygoniaPlayer.PolygoniaMode.None);
 			SendMessage(event, "Zone Saved.");
 		} else {
 			Help(event, ezp, playerID);
@@ -325,7 +327,7 @@ public class ZoneCommandHandler {
 
 	private static void Flag(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if ((data.length > 3) && (data[2].length() > 0)
 					&& (data[3].length() > 0)) {
 				String flag = data[2];
@@ -350,7 +352,7 @@ public class ZoneCommandHandler {
 
 	private static void Floor(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if ((data.length > 2) && (IsNumeric(data[2]))) {
 				Integer value = Integer.valueOf(Integer.parseInt(data[2]));
 				Set(playerID, "floor", value);
@@ -366,7 +368,7 @@ public class ZoneCommandHandler {
 
 	private static void Ceiling(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if ((data.length > 2) && (IsNumeric(data[2]))) {
 				Integer value = Integer.valueOf(Integer.parseInt(data[2]));
 				Set(playerID, "ceiling", value);
@@ -382,15 +384,15 @@ public class ZoneCommandHandler {
 
 	private static void AddChildren(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				for (int i = 2; i < data.length; i++) {
 					String tag = data[i].replaceAll("[^a-zA-Z0-9]", "");
 					if ((tag.length() <= 0)
-							|| (General.myZones.get(tag) == null))
+							|| (Polygonia.getInstance().getZone(tag) == null))
 						continue;
 					Set(playerID, "addchildtag", tag);
-					Set(playerID, "addchild", General.myZones.get(tag));
+					Set(playerID, "addchild", Polygonia.getInstance().getZone(tag));
 				}
 				SendMessage(event, "Zone Children Updated.");
 			}
@@ -401,7 +403,7 @@ public class ZoneCommandHandler {
 
 	private static void RemoveChildren(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				for (int i = 2; i < data.length; i++) {
 					String tag = data[i].replaceAll("[^a-zA-Z0-9]", "");
@@ -419,7 +421,7 @@ public class ZoneCommandHandler {
 
 	private static void Name(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				String message = "";
 				for (int i = 2; i < data.length; i++) {
@@ -437,7 +439,7 @@ public class ZoneCommandHandler {
 
 	private static void EnterMessage(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				String message = "";
 				for (int i = 2; i < data.length; i++) {
@@ -456,7 +458,7 @@ public class ZoneCommandHandler {
 
 	private static void LeaveMessage(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				String message = "";
 				for (int i = 2; i < data.length; i++) {
@@ -475,22 +477,22 @@ public class ZoneCommandHandler {
 
 	private static void Draw(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
-			Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.ZoneDrawConfirm);
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
+			Set(playerID, "mode", PolygoniaPlayer.PolygoniaMode.ZoneDrawConfirm);
 			SendMessage(
 					event,
 					"WARNING! Entering draw mode will erase all points for the zone! type /zone draw confirm or /zone draw deny.");
-		} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDrawConfirm) {
+		} else if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDrawConfirm) {
 			if (data.length > 2) {
 				if (data[2].equalsIgnoreCase("confirm")) {
 					Set(playerID, "mode",
-							PolygoniaPlayer.PloygoniaMode.ZoneDraw);
+							PolygoniaPlayer.PolygoniaMode.ZoneDraw);
 					SendMessage(
 							event,
 							"Start drawing your zone with the zone edit tool. Type /zone save when you are done drawing.");
 				} else if (data[2].equalsIgnoreCase("deny")) {
 					Set(playerID, "mode",
-							PolygoniaPlayer.PloygoniaMode.ZoneEdit);
+							PolygoniaPlayer.PolygoniaMode.ZoneEdit);
 					SendMessage(event,
 							"Draw Mode canceled, back in Edit Mode. type /zone for more options.");
 				}
@@ -502,7 +504,7 @@ public class ZoneCommandHandler {
 
 	private static void World(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			if (data.length > 2) {
 				if (data[2].length() > 0) {
 					Set(playerID, "world", data[2]);
@@ -516,16 +518,26 @@ public class ZoneCommandHandler {
 
 	private static void Confirm(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDeleteConfirm) {
-			General.myZoneTags.remove(ezp.getEditZone().getTag());
-			General.SaveZones();
-			General.loadZones(null);
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDeleteConfirm) {
+			try {
+				Polygonia.getInstance().delZone(ezp.getEditZone().getTag());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Polygonia.SaveZones();
+			try {
+				Polygonia.loadZones(null);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			SendMessage(event, "Zone [" + ezp.getEditZone().getTag()
 					+ "] has been deleted.");
-			Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.None);
+			Set(playerID, "mode", PolygoniaPlayer.PolygoniaMode.None);
 			Set(playerID, "editzone", null);
-		} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDrawConfirm) {
-			Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.ZoneDraw);
+		} else if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDrawConfirm) {
+			Set(playerID, "mode", PolygoniaPlayer.PolygoniaMode.ZoneDraw);
 			Set(playerID, "clearpoints", "");
 			SendMessage(
 					event,
@@ -537,16 +549,15 @@ public class ZoneCommandHandler {
 
 	private static void Edit(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.None) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.None) {
 			if (data.length > 2) {
 				if (data[2].length() > 0) {
 					String tag = data[2].replaceAll("[^a-zA-Z0-9]", "");
-					if (General.myZones.get(data[2]) != null) {
+					if (Polygonia.getInstance().getZone(data[2]) != null) {
 
-						Set(playerID, "editzone", new Polygonia(
-								(Polygonia) General.myZones.get(tag)));
+						Set(playerID, "editzone", Polygonia.getInstance().getZone(tag));
 						Set(playerID, "mode",
-								PolygoniaPlayer.PloygoniaMode.ZoneEdit);
+								PolygoniaPlayer.PolygoniaMode.ZoneEdit);
 						SendMessage(event, "Editing Zone: " + tag);
 					} else {
 						SendMessage(event, "No sutch zone as: " + tag);
@@ -560,15 +571,15 @@ public class ZoneCommandHandler {
 
 	private static void Cancel(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if ((ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit)
-				|| (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDraw)) {
-			Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.None);
+		if ((ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit)
+				|| (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDraw)) {
+			Set(playerID, "mode", PolygoniaPlayer.PolygoniaMode.None);
 			Set(playerID, "editzone", null);
 			SendMessage(event,
 					"Zone modification cancelled, no changes were saved.");
-		} else if ((ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDrawConfirm)
-				|| (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDeleteConfirm)) {
-			Set(playerID, "mode", PolygoniaPlayer.PloygoniaMode.ZoneEdit);
+		} else if ((ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDrawConfirm)
+				|| (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDeleteConfirm)) {
+			Set(playerID, "mode", PolygoniaPlayer.PolygoniaMode.ZoneEdit);
 			SendMessage(event,
 					"Draw Mode canceled, back in Edit Mode. type /zone for more options.");
 		} else {
@@ -578,9 +589,9 @@ public class ZoneCommandHandler {
 
 	private static void Delete(String[] data, PlayerChatEvent event,
 			PolygoniaPlayer ezp, int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			Set(playerID, "mode",
-					PolygoniaPlayer.PloygoniaMode.ZoneDeleteConfirm);
+					PolygoniaPlayer.PolygoniaMode.ZoneDeleteConfirm);
 			SendMessage(event, "To continue deleting the zone ["
 					+ ezp.getEditZone().getTag() + "] type /zone confirm.");
 		} else {
@@ -590,7 +601,7 @@ public class ZoneCommandHandler {
 
 	private static void Help(PlayerChatEvent event, PolygoniaPlayer ezp,
 			int playerID) {
-		if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneEdit) {
+		if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneEdit) {
 			SendMessage(event,
 					"You are currently in Edit mode. The following commands are available.");
 			SendMessage(event,
@@ -624,7 +635,7 @@ public class ZoneCommandHandler {
 			SendMessage(
 					event,
 					"/zone save - Saves all changes for the current zone you are editing, and dumps you out of edit mode.");
-		} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDraw) {
+		} else if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDraw) {
 			SendMessage(event,
 					"You are currently in Draw mode. The following commands are available.");
 			SendMessage(event,
@@ -632,7 +643,7 @@ public class ZoneCommandHandler {
 			SendMessage(
 					event,
 					"/zone cancel - Discards all changes for the current zone you are editing and dumps you out of Draw and Edit mode.");
-		} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDrawChild) {
+		} else if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDrawChild) {
 			SendMessage(event,
 					"You are currently in Draw mode. The following commands are available.");
 			SendMessage(event,
@@ -640,14 +651,14 @@ public class ZoneCommandHandler {
 			SendMessage(
 					event,
 					"/zone cancel - Discards all changes for the current zone you are editing and dumps you out of Draw and Edit mode.");
-		} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDrawConfirm) {
+		} else if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDrawConfirm) {
 			SendMessage(event,
 					"You are currently in Draw Confirm mode. The following commands are available.");
 			SendMessage(
 					event,
 					"/zone confirm - Clears point data for the current zone and puts you into Draw mode.");
 			SendMessage(event, "/zone cancel - Puts you back into EditMode.");
-		} else if (ezp.getMode() == PolygoniaPlayer.PloygoniaMode.ZoneDrawConfirm) {
+		} else if (ezp.getMode() == PolygoniaPlayer.PolygoniaMode.ZoneDrawConfirm) {
 			SendMessage(
 					event,
 					"You are currently in Delete Confirm mode. The following commands are available.");

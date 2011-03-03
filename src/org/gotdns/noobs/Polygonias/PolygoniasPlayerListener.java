@@ -92,7 +92,7 @@ public class PolygoniasPlayerListener extends PlayerListener {
 		Polygonia foundZone = null;
 		String worldName = player.getWorld().getName();
 
-		if (General.pointWithinBorder(playerPoint, player)) {
+		if (Polygonia.pointWithinBorder(playerPoint, player)) {
 			foundZone = FindZone(player, ezp, playerHeight, playerPoint,
 					worldName);
 
@@ -133,18 +133,18 @@ public class PolygoniasPlayerListener extends PlayerListener {
 
 		if (ezp.getCurrentZone() != null) {
 			result = ezp.getCurrentZone();
-			String resultTag = General.isPointInZone(result, playerHeight,
+			String resultTag = Polygonia.isPointInZone(result, playerHeight,
 					playerPoint, worldName);
 			if (resultTag.length() > 0) {
-				if (!resultTag.equalsIgnoreCase(ezp.getCurrentZone().getTag())) {
-					result = (Polygonia) General.myZones.get(resultTag);
+				if (!resultTag.equalsIgnoreCase(result.getTag())) {
+					result = (Polygonia) Polygonia.getInstance().getZone(resultTag);
 				}
 			} else {
 				result = null;
 			}
 
 		} else {
-			result = General.getZoneForPoint(player, ezp, playerHeight,
+			result = Polygonia.getZoneForPoint(player, ezp, playerHeight,
 					playerPoint, worldName);
 		}
 
@@ -187,8 +187,8 @@ public class PolygoniasPlayerListener extends PlayerListener {
 			boolean hasPerms = false;
 
 			Polygonia currentZone = null;
-			if (General.pointWithinBorder(blockPoint, player)) {
-				currentZone = General.getZoneForPoint(player, ezp, blockHeight,
+			if (Polygonia.pointWithinBorder(blockPoint, player)) {
+				currentZone = Polygonia.getZoneForPoint(player, ezp, blockHeight,
 						blockPoint, worldName);
 				hasPerms = General.hasPermissions(player, currentZone, "build");
 
@@ -211,8 +211,8 @@ public class PolygoniasPlayerListener extends PlayerListener {
 			boolean hasPerms = false;
 
 			Polygonia currentZone = null;
-			if (General.pointWithinBorder(blockPoint, player)) {
-				currentZone = General.getZoneForPoint(player, ezp, blockHeight,
+			if (Polygonia.pointWithinBorder(blockPoint, player)) {
+				currentZone = Polygonia.getZoneForPoint(player, ezp, blockHeight,
 						blockPoint, worldName);
 				hasPerms = General.hasPermissions(player, currentZone,
 						"destroy");
@@ -228,20 +228,20 @@ public class PolygoniasPlayerListener extends PlayerListener {
 		} else if (event.getPlayer().getItemInHand().getTypeId() == General.config.zoneTool) {
 			Player player = event.getPlayer();
 			PolygoniaPlayer ezp = General.getPlayer(player.getName());
-			PolygoniaPlayer.PloygoniaMode mode = General.getPlayer(
+			PolygoniaPlayer.PolygoniaMode mode = General.getPlayer(
 					event.getPlayer().getEntityId()).getMode();
 			String worldName = player.getWorld().getName();
 			int blockHeight = event.getBlockClicked().getLocation().getBlockY();
 			// The zone that is currently being edited is fetched from the list
 			Polygonia editzone = General.getPlayer(
 					event.getPlayer().getEntityId()).getEditZone();
-			if (mode == PolygoniaPlayer.PloygoniaMode.ZoneDraw
-					|| mode == PolygoniaPlayer.PloygoniaMode.ZoneDrawChild) {
+			if (mode == PolygoniaPlayer.PolygoniaMode.ZoneDraw
+					|| mode == PolygoniaPlayer.PolygoniaMode.ZoneDrawChild) {
 				Point point = new Point(event.getBlockClicked().getLocation()
 						.getBlockX(), event.getBlockClicked().getLocation()
 						.getBlockZ());
-				if (mode == PolygoniaPlayer.PloygoniaMode.ZoneDrawChild) {
-					if (General.getZoneForPoint(player, ezp, blockHeight,
+				if (mode == PolygoniaPlayer.PolygoniaMode.ZoneDrawChild) {
+					if (Polygonia.getZoneForPoint(player, ezp, blockHeight,
 							point, worldName) == editzone.getParent()) {
 						editzone.addPoint(point);
 						event.getPlayer().sendMessage(

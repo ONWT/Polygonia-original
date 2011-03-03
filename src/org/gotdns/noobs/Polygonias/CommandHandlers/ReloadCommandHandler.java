@@ -2,6 +2,7 @@ package org.gotdns.noobs.Polygonias.CommandHandlers;
 
 import org.bukkit.event.player.PlayerChatEvent;
 import org.gotdns.noobs.Polygonias.General;
+import org.gotdns.noobs.Polygonias.Polygonia;
 import org.gotdns.noobs.Polygonias.Polygonias;
 
 public class ReloadCommandHandler {
@@ -12,7 +13,7 @@ public class ReloadCommandHandler {
 				plugin.setupPermissions();
 				General.config.load();
 				General.config.save();
-				General.loadZones(null);
+				Polygonia.loadZones(null);
 				event.getPlayer().sendMessage("Polygonias Reloaded.");
 				event.setCancelled(true);
 			} catch (Exception e) {

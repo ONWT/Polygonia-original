@@ -22,17 +22,17 @@ public class PolygoniasConfig extends Configuration {
 	
 	public static String Plugin_Directory;
 	// Database Type
-	public static String Database_Type = "MySQL";
+	public static String Database_Type;
 
 	// Relational SQL Generics
-	public static String SQL_Hostname = "localhost";
-	public static String SQL_Port = "3306";
-	public static String SQL_Username = "root";
-	public static String SQL_Password = "";
+	public static String SQL_Hostname;
+	public static String SQL_Port;
+	public static String SQL_Username;
+	public static String SQL_Password;
 
 	// SQL Generics
-	public static String SQL_Database = "minecraft";
-	public static String SQL_Table = "iConomy";
+	public static String SQL_Database;
+	public static String SQL_Table;
 
 	static {
 		DumperOptions options = new DumperOptions();
@@ -56,6 +56,13 @@ public class PolygoniasConfig extends Configuration {
 		this.defaultDestroy = true;
 		this.enableRadius = true;
 		this.zoneTool = 280;
+		Database_Type = "MySQL";
+		SQL_Hostname = "localhost";
+		SQL_Port = "3306";
+		SQL_Username = "root";
+		SQL_Password = "";
+		SQL_Database = "minecraft";
+		SQL_Table = "Polygonias";
 	}
 
 	public void load() {
