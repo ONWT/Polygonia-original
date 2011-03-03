@@ -267,7 +267,7 @@ public class ZoneCommandHandler {
 					try {
 						zone = Polygonia.getInstance().addZone(tag);
 					} catch (Exception e) {
-						System.out.println("Addzone failed in create whit:" +e.getMessage());
+						System.out.println("Addzone failed in create with: " +e.getMessage());
 						e.printStackTrace();
 					}
 					Set(playerID, "editzone", zone);
@@ -297,7 +297,7 @@ public class ZoneCommandHandler {
 					try {
 						zone = Polygonia.getInstance().addZone(tag);
 					} catch (Exception e) {
-						System.out.println("Addzone failed in CreateChild whit:" +e.getMessage());
+						System.out.println("Addzone failed in CreateChild with: " +e.getMessage());
 						e.printStackTrace();
 					}
 					zone.setParent(Polygonia.getInstance().getZone(ptag));
@@ -540,7 +540,7 @@ public class ZoneCommandHandler {
 			}
 			Polygonia.SaveZones();
 			try {
-				Polygonia.loadZones(null);
+				Polygonia.getInstance().loadZones(null);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

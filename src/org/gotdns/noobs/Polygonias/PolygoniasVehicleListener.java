@@ -104,7 +104,7 @@ public class PolygoniasVehicleListener extends VehicleListener {
 			}
 
 		} else {
-			result = Polygonia.getZoneForPoint(player, ezp, playerHeight,
+			result = Polygonia.getInstance().getZoneForPoint(player, ezp, playerHeight,
 					playerPoint, worldName);
 		}
 

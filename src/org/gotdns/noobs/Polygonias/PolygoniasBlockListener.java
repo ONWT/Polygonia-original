@@ -30,7 +30,7 @@ public class PolygoniasBlockListener extends BlockListener {
 
 		if (Polygonia.pointWithinBorder(blockPoint, player)) {
 			Polygonia.getInstance();
-			currentZone = Polygonia.getZoneForPoint(player, ezp, blockHeight,
+			currentZone = Polygonia.getInstance().getZoneForPoint(player, ezp, blockHeight,
 					blockPoint, worldName);
 			hasPerms = General.hasPermissions(player, currentZone, "destroy");
 
@@ -63,7 +63,7 @@ public class PolygoniasBlockListener extends BlockListener {
 		Polygonia currentZone = null;
 
 		if (Polygonia.pointWithinBorder(blockPoint, player)) {
-			currentZone = Polygonia.getZoneForPoint(player, ezp, blockHeight,
+			currentZone = Polygonia.getInstance().getZoneForPoint(player, ezp, blockHeight,
 					blockPoint, worldName);
 			hasPerms = General.hasPermissions(player, currentZone, "build");
 

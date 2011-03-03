@@ -6,13 +6,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerItemEvent;
 import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.gotdns.noobs.Polygonias.CommandHandlers.ReloadCommandHandler;
-import org.gotdns.noobs.Polygonias.CommandHandlers.WhoCommandHandler;
 
 public class PolygoniasPlayerListener extends PlayerListener {
 	private final Polygonias plugin;
@@ -143,7 +140,7 @@ public class PolygoniasPlayerListener extends PlayerListener {
 			}
 
 		} else {
-			result = Polygonia.getZoneForPoint(player, ezp, playerHeight,
+			result = Polygonia.getInstance().getZoneForPoint(player, ezp, playerHeight,
 					playerPoint, worldName);
 		}
 
@@ -160,16 +157,6 @@ public class PolygoniasPlayerListener extends PlayerListener {
 	public void onPlayerQuit(PlayerEvent event) {
 		General.removePlayer(event.getPlayer().getEntityId());
 	}
-	
-	public void onPlayerCommandPreprocess(PlayerChatEvent event) {
-		if (!event.isCancelled()) {
-			String[] split = event.getMessage().split("\\s");
-			if (split[0].equalsIgnoreCase("/who"))
-				WhoCommandHandler.Process(split, event);
-			else if (split[0].equalsIgnoreCase("/reloadez"))
-				ReloadCommandHandler.Process(split, event, this.plugin);
-		}
-	}
 
 	public void onPlayerItem(PlayerItemEvent event) {
 		if (this.bucketTypes.contains(Integer.valueOf(event.getPlayer()
@@ -185,7 +172,7 @@ public class PolygoniasPlayerListener extends PlayerListener {
 
 			Polygonia currentZone = null;
 			if (Polygonia.pointWithinBorder(blockPoint, player)) {
-				currentZone = Polygonia.getZoneForPoint(player, ezp, blockHeight,
+				currentZone = Polygonia.getInstance().getZoneForPoint(player, ezp, blockHeight,
 						blockPoint, worldName);
 				hasPerms = General.hasPermissions(player, currentZone, "build");
 
@@ -209,7 +196,7 @@ public class PolygoniasPlayerListener extends PlayerListener {
 
 			Polygonia currentZone = null;
 			if (Polygonia.pointWithinBorder(blockPoint, player)) {
-				currentZone = Polygonia.getZoneForPoint(player, ezp, blockHeight,
+				currentZone = Polygonia.getInstance().getZoneForPoint(player, ezp, blockHeight,
 						blockPoint, worldName);
 				hasPerms = General.hasPermissions(player, currentZone,
 						"destroy");
@@ -238,7 +225,7 @@ public class PolygoniasPlayerListener extends PlayerListener {
 						.getBlockX(), event.getBlockClicked().getLocation()
 						.getBlockZ());
 				if (mode == PolygoniaPlayer.PolygoniaMode.ZoneDrawChild) {
-					if (Polygonia.getZoneForPoint(player, ezp, blockHeight,
+					if (Polygonia.getInstance().getZoneForPoint(player, ezp, blockHeight,
 							point, worldName) == editzone.getParent()) {
 						editzone.addPoint(point);
 						event.getPlayer().sendMessage(

@@ -13,7 +13,7 @@ public class ReloadCommandHandler {
 				plugin.setupPermissions();
 				General.config.load();
 				General.config.save();
-				Polygonia.loadZones(null);
+				Polygonia.getInstance().loadZones(null);
 				event.getPlayer().sendMessage("Polygonias Reloaded.");
 				event.setCancelled(true);
 			} catch (Exception e) {

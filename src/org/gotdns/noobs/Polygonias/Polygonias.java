@@ -45,7 +45,7 @@ public class Polygonias extends JavaPlugin {
 			PolygoniasConfig.Plugin_Directory=this.getDataFolder().getPath();
 			General.config.save();
 			Polygonia.getInstance();
-			Polygonia.loadZones(getDataFolder());
+			Polygonia.getInstance().loadZones(getDataFolder());
 
 			pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener,
 					Event.Priority.Normal, this);

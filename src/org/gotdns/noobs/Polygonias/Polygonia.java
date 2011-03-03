@@ -41,7 +41,7 @@ public final class Polygonia {
 	private String enterText = "";
 	private String exitText = "";
 	private Polygonia parent = null;
-	private static Map<String,Polygonia> Zones = new HashMap<String,Polygonia>();
+	private Map<String,Polygonia> Zones = new HashMap<String,Polygonia>();
 	private Map<String, Polygonia> children = new HashMap<String, Polygonia>();
 	private Set<String> owner = new HashSet<String>();
 	private Set<String> member = new HashSet<String>();
@@ -64,17 +64,17 @@ public final class Polygonia {
 	      return instance;
 	   }
 	private void AddToList(Polygonia newP) {
-		if (Zones.get(this.getTag()) == null) {
-			Zones.put(this.getTag(),newP);
+		if (instance.Zones.get(this.getTag()) == null) {
+			instance.Zones.put(this.getTag(),newP);
 		} else {
-			Zones.remove(this.getTag());
-			Zones.put(this.getTag(),newP);
+			instance.Zones.remove(this.getTag());
+			instance.Zones.put(this.getTag(),newP);
 		}
 	}
 
 	public void delZone(String Tag) throws Exception
 	{
-		Zones.remove(Tag);
+		instance.Zones.remove(Tag);
 	}
 	
 	public Polygonia addZone(String zoneData) throws Exception
@@ -90,9 +90,9 @@ public final class Polygonia {
 		if (split.length==1)
 		{
 			String tag=zoneData;
-			if (Zones.containsKey(tag))
+			if (instance.Zones.containsKey(tag))
 			{
-				newP=Zones.get(tag);
+				newP=instance.Zones.get(tag);
 			}else
 			{
 				newP = new Polygonia();
@@ -106,9 +106,9 @@ public final class Polygonia {
 		}
 		if (split.length == 10) {
 			String tag=split[0].replaceAll("[^a-zA-Z0-9]", "");
-			if (Zones.containsKey(tag))
+			if (instance.Zones.containsKey(tag))
 			{
-				newP=Zones.get(tag);
+				newP=instance.Zones.get(tag);
 			}else
 			{
 				newP = new Polygonia();
@@ -135,9 +135,9 @@ public final class Polygonia {
 		}
 		if (split.length > 10) {
 			String tag=split[0].replaceAll("[^a-zA-Z0-9]", "");
-			if (Zones.containsKey(tag))
+			if (instance.Zones.containsKey(tag))
 			{
-				newP=Zones.get(tag);
+				newP=instance.Zones.get(tag);
 			}else
 			{
 				newP = new Polygonia();
@@ -250,7 +250,7 @@ public final class Polygonia {
 	 * Loads zones from file zones.txt at path
 	 * @param path 
 	 */
-	public static void loadZones(File path) throws IOException {
+	public void loadZones(File path) throws IOException {
 		if (path != null) {
 			File file = new File(path + File.separator + ZONE_FILE);
 			ZoneFile = file;
@@ -260,8 +260,8 @@ public final class Polygonia {
 
 		try {
 			Scanner scanner = new Scanner(ZoneFile);
-			Zones.clear();
-			Zones.clear();
+			instance.Zones.clear();
+			instance.Zones.clear();
 			try {
 				while (scanner.hasNext()) {
 					String line = scanner.nextLine().trim();
@@ -279,19 +279,19 @@ public final class Polygonia {
 		reconcileChildren();
 	}
 	
-	private static void reconcileChildren() {
-		for (Polygonia zone : Zones.values()) {
+	private void reconcileChildren() {
+		for (Polygonia zone : instance.Zones.values()) {
 			if (zone.hasChildren()) {
 				for (Polygonia childZone : zone.children.values()) {
 					childZone.setParent(zone);
 					zone.addChild(childZone);
 
-					Zones.remove(childZone.getTag());
-					Zones.put(childZone.getTag(), childZone);
+					instance.Zones.remove(childZone.getTag());
+					instance.Zones.put(childZone.getTag(), childZone);
 				}
 			}
-			Zones.remove(zone.getTag());
-			Zones.put(zone.getTag(), zone);
+			instance.Zones.remove(zone.getTag());
+			instance.Zones.put(zone.getTag(), zone);
 		}
 	}
 	
@@ -339,7 +339,7 @@ public final class Polygonia {
 	
 	public Polygonia getZone(String tag)
 	{
-		return Zones.get(tag);
+		return instance.Zones.get(tag);
 	}
 	public String getTag() {
 		return this.tag;
@@ -573,7 +573,7 @@ public final class Polygonia {
 	
 	public static void SaveZones() {
 		try {
-			String data = BuildZoneData();
+			String data = instance.BuildZoneData();
 			System.out.println("Data to save: " + data);
 			Writer output = new BufferedWriter(new FileWriter(ZoneFile, false));
 			try {
@@ -586,11 +586,11 @@ public final class Polygonia {
 		}
 	}
 
-	private static String BuildZoneData() {
+	private String BuildZoneData() {
 		String result = "#Zone Tag|World|Zone Name|Flags|Enter Message|Exit Message|Floor|Ceiling|Child Zones|PointList\n";
 		String line = "";
 
-		for (Polygonia z : Zones.values()) {
+		for (Polygonia z : instance.Zones.values()) {
 			line = z.getTag() + "|";
 			line = line + z.getWorld() + "|";
 			line = line + z.getName() + "|";
@@ -669,16 +669,16 @@ public final class Polygonia {
 		return result;
 	}
 
-	public static Polygonia getZoneForPoint(Player player, PolygoniaPlayer ezp,
+	public Polygonia getZoneForPoint(Player player, PolygoniaPlayer ezp,
 			int playerHeight, Point playerPoint, String worldName) {
 		Polygonia result = null;
 		String resultTag = "";
 
-		for (Polygonia zone: Zones.values()) {
+		for (Polygonia zone: instance.instance.Zones.values()) {
 			resultTag = isPointInZone(zone, playerHeight, playerPoint,worldName);
 			if (resultTag.length() <= 0)
 				continue;
-			result = Zones.get(resultTag);
+			result = instance.Zones.get(resultTag);
 			break;
 		}
 
