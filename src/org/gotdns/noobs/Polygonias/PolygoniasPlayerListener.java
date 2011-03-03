@@ -12,13 +12,11 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 public class PolygoniasPlayerListener extends PlayerListener {
-	private final Polygonias plugin;
 	private static final String NO_PERM_BUCKET = "You do not have permissions to do that in this zone.";
 	private static final int EMPTY_BUCKET = 325;
 	private Set<Integer> bucketTypes = new HashSet<Integer>();
 
 	public PolygoniasPlayerListener(Polygonias instance) {
-		this.plugin = instance;
 		this.bucketTypes.add(Integer.valueOf(326));
 		this.bucketTypes.add(Integer.valueOf(327));
 	}

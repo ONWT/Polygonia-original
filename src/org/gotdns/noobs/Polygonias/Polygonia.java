@@ -674,7 +674,7 @@ public final class Polygonia {
 		Polygonia result = null;
 		String resultTag = "";
 
-		for (Polygonia zone: instance.instance.Zones.values()) {
+		for (Polygonia zone: instance.Zones.values()) {
 			resultTag = isPointInZone(zone, playerHeight, playerPoint,worldName);
 			if (resultTag.length() <= 0)
 				continue;
