@@ -13,7 +13,6 @@ import org.bukkit.event.player.PlayerListener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.gotdns.noobs.Polygonias.CommandHandlers.ReloadCommandHandler;
 import org.gotdns.noobs.Polygonias.CommandHandlers.WhoCommandHandler;
-import org.gotdns.noobs.Polygonias.CommandHandlers.ZoneCommandHandler;
 
 public class PolygoniasPlayerListener extends PlayerListener {
 	private final Polygonias plugin;
@@ -169,8 +168,6 @@ public class PolygoniasPlayerListener extends PlayerListener {
 				WhoCommandHandler.Process(split, event);
 			else if (split[0].equalsIgnoreCase("/reloadez"))
 				ReloadCommandHandler.Process(split, event, this.plugin);
-			else if (split[0].equalsIgnoreCase("/zone"))
-				ZoneCommandHandler.Process(split, event);
 		}
 	}
 

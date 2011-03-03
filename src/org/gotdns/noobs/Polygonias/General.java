@@ -3,6 +3,7 @@ package org.gotdns.noobs.Polygonias;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class General {
@@ -23,6 +24,15 @@ public class General {
 	public static PolygoniaPlayer getPlayer(int entityID) {
 		for (PolygoniaPlayer ezp : myPlayers) {
 			if (ezp.getEntityID() == entityID) {
+				return ezp;
+			}
+		}
+		return null;
+	}
+	public static PolygoniaPlayer getPlayer(CommandSender sender) {
+		Player p = (Player) sender;
+		for (PolygoniaPlayer ezp : myPlayers) {
+			if (ezp.getEntityID() == p.getEntityId()) {
 				return ezp;
 			}
 		}
@@ -105,4 +115,5 @@ public class General {
 
 	public static void Regen() {
 	}
+
 }

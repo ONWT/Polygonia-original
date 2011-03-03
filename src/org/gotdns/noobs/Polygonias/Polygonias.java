@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.gotdns.noobs.Polygonias.CommandHandlers.ZoneCommandHandler;
 
 import com.nijiko.permissions.PermissionHandler;
 
@@ -43,7 +44,8 @@ public class Polygonias extends JavaPlugin {
 			General.config.load();
 			PolygoniasConfig.Plugin_Directory=this.getDataFolder().getPath();
 			General.config.save();
-			Polygonia.getInstance().loadZones(getDataFolder());
+			Polygonia.getInstance();
+			Polygonia.loadZones(getDataFolder());
 
 			pm.registerEvent(Event.Type.PLAYER_MOVE, this.playerListener,
 					Event.Priority.Normal, this);
@@ -87,14 +89,19 @@ public class Polygonias extends JavaPlugin {
 
 	public void onDisable() {
 		PluginDescriptionFile pdfFile = getDescription();
-		Polygonia.getInstance().SaveZones();
+		Polygonia.SaveZones();
 		System.out.println(pdfFile.getName() + " version "
 				+ pdfFile.getVersion() + " is disabled.");
 	}
 
 	@Override
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-		
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args)
+	{
+		String commandName = command.getName().toLowerCase();
+		if(commandName=="zone")
+		{
+			ZoneCommandHandler.Process(args, sender);
+		}
 		return false;
 	}
 	public boolean isDebugging(Player player) {

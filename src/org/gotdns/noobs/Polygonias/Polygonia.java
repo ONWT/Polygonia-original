@@ -443,6 +443,7 @@ public final class Polygonia {
 		if (this.children == null)
 			this.children = new HashMap<String, Polygonia>();
 		this.children.put(childZone.getTag(), childZone);
+		reconcileChildren();
 	}
 
 	public void removeChild(String tag) {
